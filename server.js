@@ -29,13 +29,13 @@ const transporter = nodemailer.createTransport({
 console.log(`Email User: ${process.env.EMAIL_USER}`);
 console.log(`Email Password: ${process.env.EMAIL_PASS}`);
 
-// Endpoint to handle email form submission
 app.post('/send-email', (req, res) => {
-    console.log('Received form data:', req.body); // Debugging log
+    console.log('Received form data:', req.body);
     const { naam, email, reason, bericht } = req.body;
 
     const mailOptions = {
-        from: email,
+        from: process.env.EMAIL_USER, // Send from your own email
+        replyTo: email, // Set reply-to to the user's email
         to: process.env.EMAIL_USER,
         subject: `Hulpdienstvoertuigenbenelux - ${reason} - ${naam}`,
         html: `

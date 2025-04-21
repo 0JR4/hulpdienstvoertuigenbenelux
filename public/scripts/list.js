@@ -47,7 +47,7 @@ const NLDropdown = {
         { value: "24", text: "24 - Zuid-Limburg (VRZL)" },
         { value: "25", text: "25 - Flevoland (VRFL)" },
         { value: "26", text: "26 - NIPV (IFV)" },
-        { value: "28", text: "28 - Defentie (DF)" },
+        { value: "28", text: "28 - Defensie (DF)" },
         { value: "NN", text: "NN - Noord-Nederland (RWS)" },
         { value: "ON", text: "ON - Oost-Nederland (RWS)" },
         { value: "MN", text: "MN - Midden-Nederland (RWS)" },

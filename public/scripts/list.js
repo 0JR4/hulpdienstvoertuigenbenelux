@@ -9,7 +9,7 @@ const NLDropdown = {
         { value: "ProRail", text: "ProRail" },
         { value: "Rijkswaterstaat", text: "Rijkswaterstaat" },
         { value: "Ziekenhuizen", text: "Ziekenhuizen" },
-        { value: "Ac", text: "Scholen" },
+        { value: "Academies", text: "Scholen" },
         { value: "Meldkamers", text: "Meldkamers" },
         { value: "Weginspecteurs", text: "Weginspecteurs" },
         { value: "Kustwacht", text: "Kustwacht" },
@@ -218,6 +218,41 @@ function updateHulpdienstDropdown(regioValue) {
         hulpdienstDropdownButton.innerHTML = `KMAR/Douane <i class="fa fa-chevron-down"></i>`;
         hulpdienstDropdownButton.setAttribute('data-value', 'KMAR/Douane');
         filterRegioDropdown('KMAR/Douane');
+    } else {
+        // Reset to show general services excluding specialized ones
+        const dropdownData = window.location.search.includes('NL') ? NLDropdown : 
+                            window.location.search.includes('BE') ? BEDropdown : LUXDropdown;
+
+        const generalServices = dropdownData.HulpdienstDropdown.filter(item => 
+            [
+                "all",
+                "Brandweer",
+                "Ambulance",
+                "Reddingsbrigade",
+                "KNRM",
+                "ProRail",
+                "Rijkswaterstaat",
+                "Ziekenhuizen",
+                "Academies",
+                "Meldkamers",
+                "Weginspecteurs",
+                "Kustwacht",
+                "Defensie",
+                "Bergingsbedrijf",
+                "Rijksrederij"
+            ].includes(item.value)
+        );
+
+        // Update the dropdown with filtered general services
+        populateDropdown(hulpdienstDropdownButton, generalServices);
+        initializeCustomDropdown(hulpdienstDropdownButton, debouncedUpdateList);
+
+        // Reset Hulpdienst value to 'all'
+        hulpdienstDropdownButton.innerHTML = `Alle Hulpdiensten <i class="fa fa-chevron-down"></i>`;
+        hulpdienstDropdownButton.setAttribute('data-value', 'all');
+
+        // Re-filter regions based on default 'all' service
+        filterRegioDropdown('all');
     }
 }
 

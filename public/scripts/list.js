@@ -9,7 +9,7 @@ const NLDropdown = {
         { value: "ProRail", text: "ProRail" },
         { value: "Rijkswaterstaat", text: "Rijkswaterstaat" },
         { value: "Ziekenhuizen", text: "Ziekenhuizen" },
-        { value: "Academies", text: "Academies" },
+        { value: "Academies", text: "Scholen" },
         { value: "Meldkamers", text: "Meldkamers" },
         { value: "Weginspecteurs", text: "Weginspecteurs" },
         { value: "Kustwacht", text: "Kustwacht" },
@@ -171,34 +171,53 @@ function filterRegioDropdown(hulpdienstValue) {
     regioDropdownMenu.innerHTML = ''; // Clear existing options
 
     // Determine which dropdown data to use based on the URL
-    const dropdownData = window.location.search.includes('NL') ? NLDropdown : BEDropdown;
+    const dropdownData = window.location.search.includes('NL') ? NLDropdown : window.location.search.includes('BE') ? BEDropdown : null ;
 
     let filteredRegions = [];
 
     if (hulpdienstValue === 'all') {
+        // Show all regions including "Alle Regio's"
         filteredRegions = dropdownData.RegioDropdown;
     } else if (hulpdienstValue === 'Politie') {
+        // Only show general + Politie-specific regions
         filteredRegions = dropdownData.RegioDropdown.filter(
-            region => region.value === 'all' || region.text.includes('(Politie)')
+            region => region.value === 'all' || region.text.includes('(Pol)')
         );
     } else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
+        // Only show general + RWS-specific regions
         filteredRegions = dropdownData.RegioDropdown.filter(
             region => region.value === 'all' || region.text.includes('(RWS)')
         );
     } else if (hulpdienstValue === 'KMAR/Douane') {
+        // Only show general + KMAR/Douane-specific regions
         filteredRegions = dropdownData.RegioDropdown.filter(
             region => region.value === 'all' || region.text.includes('(KMAR/Douane)')
         );
     } else {
-        filteredRegions = dropdownData.RegioDropdown.filter(
-            region => !region.text.includes('(Politie)') && !region.text.includes('(RWS)')
-        );
+        // For all other services (e.g. Brandweer, Ambulance), exclude special regions
+        filteredRegions = dropdownData.RegioDropdown.filter(region => {
+            return (
+                region.value === 'all' ||
+                (!region.text.includes('(Pol)') &&
+                 !region.text.includes('(RWS)') &&
+                 !region.text.includes('(KMAR/Douane)'))
+            );
+        });
+    }
+
+    // For LUX, disable the dropdown if there's only one option
+    if (window.location.search.includes('LUX') && dropdownData.RegioDropdown.length === 1) {
+        regioDropdownButton.style.pointerEvents = 'none';
+        regioDropdownButton.style.opacity = '0.7';
+    } else {
+        regioDropdownButton.style.pointerEvents = '';
+        regioDropdownButton.style.opacity = '';
     }
 
     // Populate the dropdown with the filtered regions
     populateDropdown(regioDropdownButton, filteredRegions);
 
-    // Initialize the custom dropdown functionality
+    // Re-initialize the custom dropdown functionality
     initializeCustomDropdown(regioDropdownButton, debouncedUpdateList);
 }
 

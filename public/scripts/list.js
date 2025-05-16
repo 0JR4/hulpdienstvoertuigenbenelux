@@ -9,7 +9,7 @@ const NLDropdown = {
         { value: "ProRail", text: "ProRail" },
         { value: "Rijkswaterstaat", text: "Rijkswaterstaat" },
         { value: "Ziekenhuizen", text: "Ziekenhuizen" },
-        { value: "Scholen", text: "Scholen" },
+        { value: "Ac", text: "Scholen" },
         { value: "Meldkamers", text: "Meldkamers" },
         { value: "Weginspecteurs", text: "Weginspecteurs" },
         { value: "Kustwacht", text: "Kustwacht" },

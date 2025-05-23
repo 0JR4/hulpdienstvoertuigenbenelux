@@ -532,13 +532,8 @@ function createInfoGroup(row) {
 
     if (hulpdienstValue === 'Ziekenhuizen') {
         if (isNederland) {
-            // Nederland layout - ongewijzigd
             const infoContainer = document.createElement('div');
             infoContainer.className = 'info-container';
-
-            const upperRow = document.createElement('div');
-            upperRow.className = 'info-box double';
-
             // Adres
             const adresBox = document.createElement('div');
             adresBox.className = 'info-box';
@@ -550,8 +545,7 @@ function createInfoGroup(row) {
             adresValue.textContent = row.TypeVoertuig || '';
             adresBox.appendChild(adresLabel);
             adresBox.appendChild(adresValue);
-            upperRow.appendChild(adresBox);
-
+            infoContainer.appendChild(adresBox);
             // Aantal Bedden
             const beddenBox = document.createElement('div');
             beddenBox.className = 'info-box';
@@ -563,10 +557,10 @@ function createInfoGroup(row) {
             beddenValue.textContent = row.Bijzonderheden || '';
             beddenBox.appendChild(beddenLabel);
             beddenBox.appendChild(beddenValue);
-            upperRow.appendChild(beddenBox);
+            infoContainer.appendChild(beddenBox);
 
-            infoContainer.appendChild(upperRow);
-            infoGroup.appendChild(infoContainer);
+            // ✅ GEEN else-if hier - voeg alles toe aan de infoGroup
+            infoGroup.appendChild(infoContainer); // << Deze regel ontbrak!
 
         } else if (hulpdienstValue === 'Ziekenhuizen' && !isNederland) {
             // België ziekenhuizen layout

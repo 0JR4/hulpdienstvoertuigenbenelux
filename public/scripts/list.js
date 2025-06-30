@@ -112,6 +112,7 @@ const LUXDropdown = {
         { value: "Ambulance", text: "Ambulance" },
         { value: "Ziekenhuizen", text: "Ziekenhuizen" },
         { value: "Meldkamers", text: "Meldkamers" },
+        { value: "Academies", text: "Academies"},
     ],
 
     RegioDropdown: [

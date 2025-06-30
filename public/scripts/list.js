@@ -124,6 +124,7 @@ const input = document.getElementById('search-input');
 const hulpdienstDropdown = document.getElementById('hulpdienst-dropdown');
 const regioDropdown = document.getElementById('regio-dropdown');
 const scrollableContent = document.querySelector('.scroll-content');
+const urlParams = window.location.search.substring(1);
 
 let count = 100;
 let preprocessedDataset = [];
@@ -558,7 +559,6 @@ function createInfoGroup(row) {
 
     const hulpdienstDropdown = document.getElementById('hulpdienst-dropdown');
     const hulpdienstValue = hulpdienstDropdown.getAttribute('data-value') || 'all';
-    const urlParams = window.location.search.substring(1);
     const isNederland = urlParams === 'NL';
     const isBelgium = urlParams === 'BE';
     const isLuxembourg = urlParams === 'LUX';
@@ -980,7 +980,6 @@ scrollableContent.addEventListener('scroll', () => {
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const urlParams = window.location.search.substring(1);
     const region = urlParams;
 
     const sheetData = await fetchDataFromGoogleSheets(region);

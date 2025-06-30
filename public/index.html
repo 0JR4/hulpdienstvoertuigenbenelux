@@ -72,10 +72,13 @@
 
                 <section id="header-buttons">
                     <button id="btn-nl">
-                        <i class="fas fa-list"></i> Lijst Nederland
+                        <i class="fas fa-list"></i> Nederland
                     </button>
                     <button id="btn-be">
-                        <i class="fas fa-list"></i> Lijst België
+                        <i class="fas fa-list"></i> België
+                    </button>
+                    <button id="btn-lu">
+                        <i class="fas fa-list"></i> Luxemburg
                     </button>
                 </section>
             </div>
@@ -151,7 +154,7 @@
                     </div>
                     <div class="button-row">
                         <div id="list-images"><img src="img/buttons/Bergingsbedrijf.png" alt="Bergingsbedrijf"></div>
-                        <div id="list-images"><img src="img/buttons/Douane.png" alt="KMAR/Douane"></div>
+                        <div id="list-images"><img src="img/buttons/Douane.png" alt="KMAR"></div>
                         <div id="list-images"><img src="img/buttons/Rijksrederij.png" alt="Rijksrederij"></div>
                         <div id="list-images"><img src="img/buttons/Defensie.png" alt="Defensie"></div>
                     </div>
@@ -275,15 +278,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Handle "Lijst Nederland" and "Lijst Belgie" button clicks
-    const btnNL = document.getElementById('btn-nl');
-    const btnBE = document.getElementById('btn-be');
-
-    btnNL.addEventListener('click', () => {
+    document.getElementById('btn-nl').addEventListener('click', () => {
         window.location.href = 'list.html?NL';
     });
 
-    btnBE.addEventListener('click', () => {
+    document.getElementById('btn-be').addEventListener('click', () => {
         window.location.href = 'list.html?BE';
+    });
+
+    document.getElementById('btn-lu').addEventListener('click', () => {
+        window.location.href = 'list.html?LUX';
     });
 
     // Handle clicks on list images

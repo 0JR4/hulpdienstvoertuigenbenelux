@@ -381,84 +381,57 @@ transform: translateY(-2px);
     justify-content: center;
     align-items: center;
     width: 100%;
-    gap: 2vw;
+    gap: 1vw;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 #header-buttons button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: clamp(100px, 30vw, 300px); 
-    height: clamp(30px, calc(30vw / 6), 40px);
+    width: clamp(80px, 20vw, 180px);
+    height: clamp(30px, calc(20vw / 4), 40px);
     border: none;
-    border-radius: 12px; 
-    gap: 8px; 
+    border-radius: 8px;
+    gap: 6px;
     background: linear-gradient(135deg, rgba(45, 125, 246, 0.9), rgba(26, 91, 191, 0.9));
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     box-sizing: border-box;
-    transition: all 0.3s ease;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    padding: 0 8px;
+    transform-origin: center;
     will-change: transform;
 }
 
+#header-buttons button i {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
+}
 
 #header-buttons button:hover {
     background: linear-gradient(135deg, rgba(45, 125, 246, 1), rgba(26, 91, 191, 1));
     transform: scale(1.03);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Media Queries for Smaller Screens */
-@media (max-width: 768px) {
-    /* #header {
-        padding: 10px; 
-    }
+#header-buttons button:hover i {
+    transform: scale(0.97);
+}
 
-    #header-logo img {
-        width: clamp(80px, 22vw, 150px); 
-    }
-
-    #header-text {
-        padding: 5px;
-    }
-
-    #header h1 {
-        font-size: clamp(24px, 6vw, 40px);
-    }
-
-    #header h2 {
-        font-size: clamp(12px, 3.5vw, 24px);
-    } */
-
+@media (max-width: 600px) {
     #header-buttons {
-        flex-direction: column; /* Stack buttons vertically on smaller screens */
-        gap: 10px; /* Reduce gap between buttons */
+        gap: 8px;
     }
-
     #header-buttons button {
-        width: 80%; /* Make buttons wider on smaller screens */
-        height: 40px; /* Set a fixed height for easier tapping */
+        font-size: 12px;
+        width: clamp(70px, 25vw, 120px);
     }
 }
-
-/* @media (max-width: 480px) {
-    #header h1 {
-        font-size: clamp(20px, 6vw, 32px); 
-    }
-
-    #header h2 {
-        font-size: clamp(10px, 3.5vw, 20px); 
-    }
-
-    #header-buttons button {
-        width: 90%; 
-        height: 35px; 
-        font-size: 14px; 
-    }
-} */
 
 
 #index-container {

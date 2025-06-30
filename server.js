@@ -75,7 +75,7 @@ app.get('/fetch-sheet', async (req, res) => {
         return res.json(cachedData);
     }
 
-    const SheetName = region === 'NL' ? 'MegaSheetNL' : region === 'BE' ? 'MegaSheetBE' : null;
+    const SheetName = region === 'NL' ? 'MegaSheetNL' : region === 'BE' ? 'MegaSheetBE' : region === 'LUX' ? 'MegaSheetLUX' : null;
     if (!SheetName) return res.status(400).json({ error: 'Invalid region specified' });
 
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SheetName}?key=${API_KEY}`;

@@ -1,509 +1,1334 @@
-<!DOCTYPE html>
-<html lang="nl" style="overflow: hidden;"> 
+const NLDropdown = {
+    HulpdienstDropdown: [
+        { value: "all", text: "Alle Hulpdiensten" },
+        { value: "Politie", text: "Politie" },
+        { value: "Brandweer", text: "Brandweer" },
+        { value: "Ambulance", text: "Ambulance" },
+        { value: "Reddingsbrigade", text: "Reddingsbrigade" },
+        { value: "KNRM", text: "KNRM" },
+        { value: "ProRail", text: "ProRail" },
+        { value: "Rijkswaterstaat", text: "Rijkswaterstaat" },
+        { value: "Ziekenhuizen", text: "Ziekenhuizen" },
+        { value: "Academies", text: "Academies" },
+        { value: "Meldkamers", text: "Meldkamers" },
+        { value: "Weginspecteurs", text: "Weginspecteurs" },
+        { value: "Kustwacht", text: "Kustwacht" },
+        { value: "Defensie", text: "Defensie" },
+        { value: "Bergingsbedrijf", text: "Bergingsbedrijf" },
+        { value: "KMAR", text: "KMAR" },
+        { value: "Rijksrederij", text: "Rijksrederij" },
+    ],
+
+    RegioDropdown: [
+        { value: "all", text: "Alle Regio's" },
+        { value: "1", text: "1 - Groningen (HVDG)" },
+        { value: "2", text: "2 - Fryslan (VRF)" },
+        { value: "3", text: "3 - Drenthe (VRD)" },
+        { value: "4", text: "4 - IJsselland (VRIJ)" },
+        { value: "5", text: "5 - Twente (VRT)" },
+        { value: "6", text: "6 - Noord en Oost-Gelderland (VNOG)" },
+        { value: "7", text: "7 - Gelderland Midden (VGGM)" },
+        { value: "8", text: "8 - Gelderland Zuid (VRGZ)" },
+        { value: "9", text: "9 - Utrecht (VRU)" },
+        { value: "10", text: "10 - Noord-Holland Noord (VRNHN)" },
+        { value: "11", text: "11 - Zaanstreek-Waterland (VRZW)" },
+        { value: "12", text: "12 - Kennemerland (VRK)" },
+        { value: "13", text: "13 - Amsterdam-Amstelland (VRAA)" },
+        { value: "14", text: "14 - Gooi en Vechtstreek (VRGV)" },
+        { value: "15", text: "15 - Haaglanden (VRH)" },
+        { value: "16", text: "16 - Hollands Midden (VRHM)" },
+        { value: "17", text: "17 - Rotterdam-Rijnmond (VRR)" },
+        { value: "18", text: "18 - Zuid-Holland Zuid (VRZHZ)" },
+        { value: "19", text: "19 - Zeeland (VRZ)" },
+        { value: "20", text: "20 - Midden en West-Brabant (VRMWB)" },
+        { value: "21", text: "21 - Brabant-Noord (VRBN)" },
+        { value: "22", text: "22 - Brabant Zuid Oost (VRBZO)" },
+        { value: "23", text: "23 - Limburg-Noord (VRLN)" },
+        { value: "24", text: "24 - Zuid-Limburg (VRZL)" },
+        { value: "25", text: "25 - Flevoland (VRFL)" },
+        { value: "26", text: "26 - NIPV (IFV)" },
+        { value: "28", text: "28 - Defensie (DF)" },
+        { value: "NN", text: "NN - Noord-Nederland (RWS)" },
+        { value: "ON", text: "ON - Oost-Nederland (RWS)" },
+        { value: "MN", text: "MN - Midden-Nederland (RWS)" },
+        { value: "WNN", text: "WNN - West-Nederland-Noord (RWS)" },
+        { value: "WNZ", text: "WNZ - West-Nederland-Zuid (RWS)" }, 
+        { value: "ZD", text: "ZD - Zee en Delta (RWS)" },
+        { value: "ZN", text: "ZN - Zuid-Nederland (RWS)" }, 
+        { value: "NN", text: "NN - Noord-Nederland (Pol)" },
+        { value: "ON", text: "ON - Oost-Nederland (Pol)" },
+        { value: "MD", text: "MD - Midden-Nederland (Pol)" },
+        { value: "NH", text: "NH - Noord-Holland (Pol)" },
+        { value: "AD", text: "AD - Amsterdam (Pol)" },
+        { value: "DH", text: "DH - Den Haag (Pol)" },
+        { value: "RT", text: "RT - Rotterdam (Pol)" },
+        { value: "ZB", text: "ZB - Zuid-Brabant (Pol)" },
+        { value: "OB", text: "OB - Oost-Brabant (Pol)" },
+        { value: "LB", text: "LB - Limburg (Pol)" }, 
+        { value: "LTC", text: "LTC (KMAR)" },
+        { value: "Cluster A", text: "Cluster A (KMAR)" },
+        { value: "Cluster B", text: "Cluster B (KMAR)" },
+        { value: "Cluster C", text: "Cluster C (KMAR)" },
+        { value: "Cluster D", text: "Cluster D (KMAR)" },
+        { value: "Cluster E", text: "Cluster E (KMAR)" },
+        { value: "Specialistische Eenheden", text: "Specialistische Eenheden (KMAR)" },
+    ]
+};
+
+const BEDropdown = {
+    HulpdienstDropdown: [
+        { value: "all", text: "Alle Hulpdiensten" },
+        { value: "Politie", text: "Politie" },
+        { value: "Brandweer", text: "Brandweer" },
+        { value: "Ambulance", text: "Ambulance" },
+        { value: "Reddingsbrigade", text: "Reddingsbrigade" },
+        { value: "Kustwacht", text: "Kustwacht" },
+        { value: "Ziekenhuizen", text: "Ziekenhuizen" },
+        { value: "Academies", text: "Academies" },
+        { value: "Meldkamers", text: "Meldkamers" },
+    ],
+
+    RegioDropdown: [
+        { value: "all", text: "Alle Regio's" },
+        { value: "Antwerpen", text: "Antwerpen" },
+        { value: "Brussel", text: "Brussel" },
+        { value: "Limburg", text: "Limburg" },
+        { value: "Oost-Vlaanderen", text: "Oost-Vlaanderen" },
+        { value: "Vlaams-Brabant", text: "Vlaams-Brabant" },
+        { value: "West-Vlaanderen", text: "West-Vlaanderen" },
+        { value: "Henegouwen", text: "Henegouwen" },
+        { value: "Luik", text: "Luik" },
+        { value: "Luxemburg", text: "Luxemburg" },
+        { value: "Waals-Brabant", text: "Waals-Brabant" },
+        { value: "Namen", text: "Namen" },
+    ],
+};
+
+const LUXDropdown = {
+    HulpdienstDropdown: [
+        { value: "all", text: "Alle Hulpdiensten" },
+        { value: "Politie", text: "Politie" },
+        { value: "Brandweer", text: "Brandweer" },
+        { value: "Ambulance", text: "Ambulance" },
+        { value: "Ziekenhuizen", text: "Ziekenhuizen" },
+        { value: "Meldkamers", text: "Meldkamers" },
+        { value: "Academies", text: "Academies"},
+    ],
+
+    RegioDropdown: [
+        { value: "all", text: "Alle Regio's" },
+    ],
+};
+
+const table = document.getElementById('list_table');
+const input = document.getElementById('search-input');
+const hulpdienstDropdown = document.getElementById('hulpdienst-dropdown');
+const regioDropdown = document.getElementById('regio-dropdown');
+const scrollableContent = document.querySelector('.scroll-content');
+const urlParams = window.location.search.substring(1);
+
+let count = 100;
+let preprocessedDataset = [];
+let filteredData = [];
+let offset = 0;
+let isScrollting = false;
+let scrollTimeout;
+let allRowsRendered = false;
+
+function convertSheetDataToJSON(sheetData) {
+    if (!Array.isArray(sheetData) || sheetData.length < 3) {
+        console.error("Invalid or missing sheet data:", sheetData);
+        return [];
+    }
+
+    const headers = sheetData[2];
+    const rows = sheetData.slice(3);
+
+    return rows.map((row) => {
+        const obj = {};
+        headers.forEach((header, index) => {
+            // Handle cases where row might be shorter than headers
+            obj[header] = (index < row.length && row[index]) ? row[index].trim() : '';
+        });
+        return obj;
+    });
+}
+
+function preprocessDataset(dataset) {
+    return dataset.map((row) => {
+        // Create search field from all available fields, safely handling missing ones
+        const searchFieldParts = [
+            'Adres', 
+            'Roepnummer', 
+            'Afkorting', 
+            'TypeVoertuig', 
+            'Kenteken', 
+            'Bijzonderheden', 
+            'Hulpdienst', 
+            'Regio'
+        ].map(field => (row[field] || '').toLowerCase().trim())
+         .filter(part => part !== ''); // Remove empty parts
+
+        return {
+            ...row,
+            _searchField: searchFieldParts.join(' ')
+        };
+    });
+}
+
+function populateDropdown(dropdownButton, dropdownData) {
+    const dropdownMenu = dropdownButton.nextElementSibling.querySelector('.dropdown-menu');;
+    dropdownMenu.innerHTML = '';
+
+    dropdownData.forEach((item) => {
+        const li = document.createElement('li');
+        li.setAttribute('value', item.value);
+        li.textContent = item.text;
+        dropdownMenu.appendChild(li);
+    });
+}
+
+function filterRegioDropdown(hulpdienstValue) {
+    const regioDropdownButton = document.getElementById('regio-dropdown');
+    const regioDropdownMenu = regioDropdownButton.nextElementSibling.querySelector('.dropdown-menu');
     
-<head>
-    <meta name="theme-color" content="#131313">
+    // Bepaal welke regio's we moeten tonen
+    let availableRegions = [];
+    
+    if (urlParams === 'NL') {
+        // Nederlandse regio logica
+        if (hulpdienstValue === 'Politie') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(Pol)'));
+        } 
+        else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(RWS)'));
+        } 
+        else if (hulpdienstValue === 'KMAR') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(KMAR)'));
+        } 
+        else {
+            // Standaard geval - toon alle regio's zonder speciale tags
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || 
+                (!r.text.includes('(Pol)') && !r.text.includes('(RWS)') && !r.text.includes('(KMAR)')));
+        }
+    } 
+    else if (urlParams === 'BE') {
+        availableRegions = BEDropdown.RegioDropdown;
+    } 
+    else if (urlParams === 'LUX') {
+        availableRegions = LUXDropdown.RegioDropdown;
+    }
+    
+    // Vul de dropdown
+    regioDropdownMenu.innerHTML = '';
+    availableRegions.forEach(region => {
+        const li = document.createElement('li');
+        li.setAttribute('value', region.value);
+        li.textContent = region.text;
+        regioDropdownMenu.appendChild(li);
+    });
+    
+    // Reset naar "Alle Regio's"
+    regioDropdownButton.innerHTML = `Alle Regio's <i class="fa fa-chevron-down"></i>`;
+    regioDropdownButton.setAttribute('data-value', 'all');
+}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lijst</title>
-    <link rel="stylesheet" href="stylee.css">
-    <script defer type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <script defer src="scripts/list.js"></script>
-    <script defer src="scripts/scrollbar.js"></script>
 
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-straight/css/uicons-bold-straight.css">
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+function updateHulpdienstDropdown(regioValue) {
+    const hulpdienstDropdownButton = document.getElementById('hulpdienst-dropdown');
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6XN7YM9YV"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    if (regioValue && regioValue.includes('(Pol)')) {
+        hulpdienstDropdownButton.innerHTML = `Politie <i class="fa fa-chevron-down"></i>`;
+        hulpdienstDropdownButton.setAttribute('data-value', 'Politie');
+        filterRegioDropdown('Politie');
+    } else if (regioValue && regioValue.includes('(RWS)')) {
+        hulpdienstDropdownButton.innerHTML = `Rijkswaterstaat <i class="fa fa-chevron-down"></i>`;
+        hulpdienstDropdownButton.setAttribute('data-value', 'Rijkswaterstaat');
+        filterRegioDropdown('Rijkswaterstaat');
+    } else if (regioValue && regioValue.includes('(KMAR)')) {
+        hulpdienstDropdownButton.innerHTML = `KMAR <i class="fa fa-chevron-down"></i>`;
+        hulpdienstDropdownButton.setAttribute('data-value', 'KMAR');
+        filterRegioDropdown('KMAR');
+    }
+}
 
-    gtag('config', 'G-C6XN7YM9YV');
-    </script>
-</head>
+function initializeCustomDropdown(dropdownButton, callback) {
+    const dropdownMenu = dropdownButton.nextElementSibling.querySelector('.dropdown-menu');
+    
+    // Function to close the dropdown
+    const closeDropdown = () => {
+        dropdownMenu.classList.remove('visible');
+    };
 
+    // Toggle dropdown visibility
+    dropdownButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('visible');
+    });
 
-<body>
-    <section id="showbox-holder">
-        <div id="showbox">
-            <div id="loader-container">
-                <div class="loader">
-                    <svg class="circular" viewBox="25 25 50 50">
-                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="scroll-container">
-        <div class="scroll-content">
-            <section id="navbar">
-                <div id="navbar-region">
-                    <a href="../list.html?NL" class="clickable">NL</a>
-                    <a>/</a>
-                    <a href="../list.html?BE" class="clickable">BE</a>
-                    <a>/</a>
-                    <a href="../list.html?LUX" class="clickable">LUX</a>
-                </div>
+    // Handle item selection
+    dropdownMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'LI') {
+            const selectedValue = e.target.getAttribute('value');
+            const selectedText = e.target.textContent;
             
-                <div id="navbar-group">
-                    <a href="index.html">
-                        <div id="navbar-button">Home</div>
-                    </a>
-                    <a href="contact.html">
-                        <div id="navbar-button">Contact</div>
-                    </a>
-                    <a href="over-ons.html">
-                        <div id="navbar-button">Over Ons</div>
-                    </a>
-                </div>
-            </section>
-
-            <section id="header">
-                <a id="header-logo" href="index.html">
-                    <img src="img/logos/Union.png" alt="Logo">
-                </a>
-                <div id="header-text">
-                    <h1>HulpdienstVoertuigen</h1>
-                    <h2>De beste hulpdienstvoertuigen informatie in de BeNeLux</h2>
-                </div>
-            </section>
-
-            <section id="list-buttons">
-                <input id="search-input" type="text" autocomplete="off" placeholder="Zoek een adres">
-                <div id="dropdown-holder">
-                    <div class="dropdown">
-                        <button id="hulpdienst-dropdown" class="dropdown-button">Alle Hulpdiensten<i class="fa fa-chevron-down"></i></button>
-                        <div class="dropdown-wrapper">
-                            <ul class="dropdown-menu">
-                                <!-- <li>Hulpdienst 1</li>
-                                <li>Hulpdienst 2</li>
-                                <li>Hulpdienst 3</li> -->
-                            </ul>
-                            <div class="custom-scrollbar">
-                                <div class="scrollbar-thumb"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dropdown">
-                        <button id="regio-dropdown" class="dropdown-button">Alle Regio's<i class="fa fa-chevron-down"></i></button>
-                        <div class="dropdown-wrapper">
-                            <ul class="dropdown-menu">
-                                <!-- <li>Regio 1</li>
-                                <li>Regio 2</li>
-                                <li>Regio 3</li> -->
-                            </ul>
-                            <div class="custom-scrollbar">
-                                <div class="scrollbar-thumb"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="containers-holder">
-                <!-- <div class="container">
-                    <div class="header">01-10 Leek, Tolberterstraat 66</div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">01-1000</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Dienstauto</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">DA 5</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">X-1234-XX</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Geen</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">02-2000</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Tankautospuit</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">BA 3</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Y-5678-YY</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Geen</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="header">01-10 Leek, Tolberterstraat 66</div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-            </section>
-        </div>
-    </div>
-
-    <div class="custom-scrollbar-body">
-        <div class="scrollbar-thumb"></div>
-    </div>
-</body>
-
-
-<script>
-    // Configuration: Set this to true to allow only one info-group to be open at a time
-    const SINGLE_OPEN_MODE = false; // Change to false to allow multiple info-groups to be open
-    // Minimum height for info-box under 350px width
-    const MIN_INFO_BOX_HEIGHT = 78;
-
-    // Function to update the height of info-group elements based on the info-box height
-    function updateInfoGroupHeight() {
-        document.querySelectorAll('.info-group').forEach(infoGroup => {
-            const infoBox = infoGroup.querySelector('.info-box');
-            if (infoBox) {
-                let infoBoxHeight = infoBox.offsetHeight;
-                // Check if the viewport width is less than 350px
-                if (window.innerWidth < 350) {
-                    // Enforce a minimum height of 78px for the info-box
-                    infoBox.style.minHeight = `${MIN_INFO_BOX_HEIGHT}px`;
-                    infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); // Ensure minimum height
-                } else {
-                    // Remove min-height if viewport width is >= 350px
-                    infoBox.style.minHeight = '';
-                }
-                const newHeight = infoBoxHeight + 4; // Add 4px to the height
-                infoGroup.style.height = `${newHeight}px`;
+            dropdownButton.innerHTML = `${selectedText} <i class="fa fa-chevron-down"></i>`;
+            dropdownButton.setAttribute('data-value', selectedValue);
+            closeDropdown();
+            
+            if (typeof callback === 'function') {
+                callback();
             }
-        });
-    }
-
-    // Add a resize event listener to the window
-    window.addEventListener('resize', () => {
-        updateInfoGroupHeight(); // Update heights on window resize
+            
+            if (dropdownButton.id === 'hulpdienst-dropdown') {
+                filterRegioDropdown(selectedValue);
+            }
+        }
     });
 
-    function toggleDetails(button) {
-        const infoGroup = button.closest('.info-group');
-        const details = infoGroup.querySelector('.toggle-section');
-        const toggleBtn = infoGroup.querySelector('.toggle-btn');
-
-        // Get the current height of the .info-box in its collapsed state
-        const infoBox = infoGroup.querySelector('.info-box');
-        let infoBoxHeight = infoBox ? infoBox.offsetHeight : 0;
-
-        // Adjust info-box height if viewport width is less than 350px
-        if (window.innerWidth < 350) {
-            infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); // Ensure minimum height
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dropdownButton.contains(e.target)) {
+            closeDropdown();
         }
+    });
 
-        let collapsedHeight = infoBoxHeight + 4; // Collapsed height (info-box height + 4px)
+    // Close when pressing Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDropdown();
+        }
+    });
+}
 
-        // If SINGLE_OPEN_MODE is true, close all other open info-groups
-        if (SINGLE_OPEN_MODE) {
-            document.querySelectorAll('.info-group').forEach((group) => {
-                if (group !== infoGroup && !group.querySelector('.toggle-section').classList.contains('hidden')) {
-                    const otherDetails = group.querySelector('.toggle-section');
-                    const otherToggleBtn = group.querySelector('.toggle-btn');
-                    // Collapse the other info-group
-                    otherDetails.classList.add('hidden');
-                    otherToggleBtn.classList.remove('active');
-                    group.style.height = `${collapsedHeight}px`; // Collapse to the collapsed height
-                    requestAnimationFrame(() => {
-                        group.style.transition = 'height 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out';
-                        group.style.height = `${collapsedHeight}px`; // Apply transition
-                        group.style.padding = '0';
-                        group.style.border = '2px solid transparent';
-                    });
-                    // Clean up after transition ends
-                    group.addEventListener('transitionend', () => {
-                        group.style.transition = '';
-                    }, { once: true });
+function filterAndSearchDataset(query, region, service, dataset) {
+    const lowerQuery = query.toLowerCase();
+    const filtered = [];
+
+    dataset.forEach((item, index, array) => {
+        // Verbeterde regio matching
+        const matchesRegion = region === 'all' || 
+                            item.Regio === region || 
+                            (item.Regio && item.Regio.includes(region)) || 
+                            (region && region.includes(item.Regio));
+
+        const matchesService = service === 'all' || item.Hulpdienst === service;
+
+        const matchesSearch =
+            lowerQuery === '' ||
+            item._searchField.includes(lowerQuery) ||
+            item.TypeVoertuig.toLowerCase().includes(lowerQuery) ||
+            (item.Roepnummer && item.Roepnummer.toLowerCase().includes(lowerQuery)); 
+
+        if (item.TypeVoertuig === '' && item.Adres) {
+            let childIndex = index + 1;
+            let hasMatchingChild = false;
+
+            while (
+                childIndex < array.length &&
+                array[childIndex].TypeVoertuig !== ''
+            ) {
+                const childRow = array[childIndex];
+                const childMatchesSearch =
+                    childRow._searchField.includes(lowerQuery) ||
+                    childRow.TypeVoertuig.toLowerCase().includes(lowerQuery) ||
+                    (childRow.Roepnummer && childRow.Roepnummer.toLowerCase().includes(lowerQuery));
+
+                if (childMatchesSearch && (region === 'all' || childRow.Regio === region)) {
+                    hasMatchingChild = true;
+                    break; 
                 }
-            });
+                childIndex++;
+            }
+
+            if (
+                matchesRegion &&
+                matchesService &&
+                (hasMatchingChild || 
+                 (lowerQuery === '' || item.Adres.toLowerCase().includes(lowerQuery)))
+            ) {
+                filtered.push(item);
+            }
+        } else if (matchesRegion && matchesService && matchesSearch) {
+            filtered.push(item);
+        }
+    });
+
+    return filtered;
+}
+
+function updateList(shouldClear = true) {
+    const query = input.value || '';
+    const region = regioDropdown.getAttribute('data-value') || 'all';
+    const service = hulpdienstDropdown.getAttribute('data-value') || 'all';
+
+    // console.log('Updating list with:', { query, region, service }); // Debug log
+
+    filteredData = filterAndSearchDataset(query, region, service, preprocessedDataset);
+
+    if (shouldClear) {
+        offset = 0;
+        allRowsRendered = false;
+    }
+
+    const containersHolder = document.getElementById('containers-holder');
+
+    if (shouldClear) {
+        containersHolder.innerHTML = '';
+    }
+
+    if (filteredData.length === 0) {
+        // Toon gepast bericht wanneer geen resultaten
+        const noMatchDiv = document.createElement('div');
+        noMatchDiv.className = 'no-results';
+        noMatchDiv.textContent = 'Geen overeenkomsten gevonden met de huidige filters.';
+        containersHolder.appendChild(noMatchDiv);
+    } else {
+        generateVisibleRows(filteredData, count, shouldClear);
+    }
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+const debouncedUpdateList = debounce(() => {
+    updateList();
+}, 50);
+
+function generateVisibleRows(dataset, amount, shouldClear = false) {
+    const containersHolder = document.getElementById('containers-holder');
+
+    if (shouldClear) {
+        containersHolder.innerHTML = '';
+        offset = 0;
+    }
+
+    if (dataset.length === 0) {
+        const noMatchDiv = document.createElement('div');
+        noMatchDiv.textContent = 'Geen overeenkomsten gevonden.';
+        noMatchDiv.style.textAlign = 'center';
+        noMatchDiv.style.padding = '20px';
+        noMatchDiv.style.color = '#888';
+        containersHolder.appendChild(noMatchDiv);
+        return;
+    }
+
+    let currentAddress = '';
+    let currentContainer = null;
+    let renderedCount = 0;
+
+    for (let i = offset; i < dataset.length; i++) {
+        const row = dataset[i];
+
+        if (row.TypeVoertuig === '' && row.Adres) {
+            if (renderedCount >= amount && currentContainer !== null) {
+                break;
+            }
+
+            currentAddress = row.Adres;
+            currentContainer = document.createElement('div');
+            currentContainer.className = 'container';
+
+            const header = document.createElement('div');
+            header.className = 'header';
+            header.textContent = currentAddress;
+            currentContainer.appendChild(header);
+
+            containersHolder.appendChild(currentContainer);
+
+            let j = i + 1;
+            while (j < dataset.length && dataset[j].TypeVoertuig !== '') {
+                const childRow = dataset[j];
+                const infoGroup = createInfoGroup(childRow);
+                currentContainer.appendChild(infoGroup);
+                renderedCount++;
+                j++;
+            }
+
+            offset = j;
+            i = j - 1;
+        } else if (currentContainer && row.TypeVoertuig !== '') {
+            const infoGroup = createInfoGroup(row);
+            currentContainer.appendChild(infoGroup);
+            renderedCount++;
         }
 
-        // Toggle the 'hidden' class on the details section
-        const isHidden = details.classList.toggle('hidden');
-        toggleBtn.classList.toggle('active', !isHidden);
+        if (renderedCount >= amount) {
+            break;
+        }
+    }
 
-        if (isHidden) {
-            // Collapse the infoGroup to the collapsed height
-            const currentHeight = infoGroup.offsetHeight; // Get the current expanded height
-            infoGroup.style.height = `${currentHeight}px`; // Set to current height to prepare for transition
-            requestAnimationFrame(() => {
-                infoGroup.style.transition = 'height 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out';
-                infoGroup.style.height = `${collapsedHeight}px`; // Transition to collapsed height
-                infoGroup.style.padding = '0';
-                infoGroup.style.border = '2px solid transparent';
-            });
-            // Recalculate collapsedHeight after transition ends
-            infoGroup.addEventListener('transitionend', () => {
-                infoGroup.style.transition = ''; // Reset transition after it ends
-                collapsedHeight = infoBox.offsetHeight + 4; // Recalculate collapsed height
-                infoGroup.style.height = `${collapsedHeight}px`; // Ensure correct height is applied
-            }, { once: true });
+    if (offset >= dataset.length) {
+        allRowsRendered = true;
+    }
+
+    debouncedUpdateInfoGroupHeight();
+
+    if (typeof window.updateScrollbar === 'function') {
+        window.updateScrollbar();
+    }
+}
+
+function getLayoutConfig(hulpdienst, isNederland) {
+    
+    if (isNederland) {
+        switch (hulpdienst) {
+            case "KNRM":
+                return { kentekenLabel: "Roepnaam / Kenteken" };
+            case "Ziekenhuizen":
+                return { showAantalBedden: true };
+            case "Academies":
+                return { showDiscipline: true };
+            case "Meldkamers":
+                return { typeVoertuigLabel: "Veiligheidsregio" };
+            case "Kustwacht":
+                return { kentekenLabel: "Roepnaam / Kenteken" };
+            case "KMAR":
+                return { 
+                    typeVoertuigLabel: "Adres", 
+                    afkortingKentekenLabel: "Informatie" 
+                };
+            default:
+                return {};
+        }
+    } else {
+        switch (hulpdienst) {
+            case "Politie":
+                return { typeVoertuigLabel: "Postnaam" };
+            case "Ambulance":
+                return { showRoepnaamTypeVoertuig: true };
+            case "Reddingsbrigade":
+                return { kentekenLabel: "Extra Type Voertuig" };
+            case "Ziekenhuizen":
+                return { showPostnaamAdresAantalBedden: true };
+            case "Academies":
+                return { showDiscipline: true };
+            case "Meldkamers":
+                return { showOnlyAdres: true };
+            default:
+                return {};
+        }
+    }
+}
+
+    function createInfoGroup(row) {
+        const infoGroup = document.createElement('div');
+        infoGroup.className = 'info-group';
+
+        const isNederland = urlParams === 'NL';
+        const isBelgium = urlParams === 'BE';
+        const isLuxembourg = urlParams === 'LUX';
+        const hulpdienst = row.Hulpdienst; // Get the actual service from the row data
+
+    // LUXEMBOURG MELDKAMERS
+    if (isLuxembourg && hulpdienst === 'Meldkamers') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        // Discipline (from TypeVoertuig) - full width
+        infoContainer.innerHTML = `
+            <div class="info-box" style="grid-column: 1 / -1">
+                <div class="label">Discipline</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            </div>
+        `;
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // LUXEMBOURG POLICE
+    if (isLuxembourg && hulpdienst === 'Politie') {
+        const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        
+        // Adres box (full width, toont TypeVoertuig waarde)
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.style.gridColumn = "1 / -1"; // Forceer full width
+        
+        if (hasBijzonderheden) {
+            // Met pijltje voor bijzonderheden
+            adresBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
         } else {
-            // Expand the infoGroup to its natural content height
-            infoGroup.style.height = 'auto'; // Temporarily set to auto to measure the natural height
-            const expandedHeight = infoGroup.scrollHeight; // Calculate the natural height
-            infoGroup.style.height = `${collapsedHeight}px`; // Reset to collapsed height before transitioning
-            requestAnimationFrame(() => {
-                infoGroup.style.transition = 'height 0.3s ease-in, padding 0.3s ease-in, border 0.3s ease-in';
-                infoGroup.style.height = `${expandedHeight}px`; // Start transitioning to the expanded height
-                // Defer applying padding and border changes until after the next frame
-                requestAnimationFrame(() => {
-                    infoGroup.style.padding = '10px';
-                    infoGroup.style.border = '2px solid #2d7df6';
-                });
-            });
-            // Clean up after transition ends
-            infoGroup.addEventListener('transitionend', () => {
-                infoGroup.style.height = 'auto'; // Set back to auto after the transition
-                infoGroup.style.transition = '';
-            }, { once: true });
+            // Zonder pijltje
+            adresBox.innerHTML = `
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
         }
+        infoGroup.appendChild(adresBox);
+
+        // Bijzonderheden (verborgen sectie, ook full width)
+        if (hasBijzonderheden) {
+            const hiddenContainer = document.createElement('div');
+            hiddenContainer.className = 'info-container toggle-section hidden';
+            hiddenContainer.style.gridColumn = "1 / -1"; // Full width
+            
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            hiddenContainer.appendChild(bijzonderhedenBox);
+            
+            infoGroup.appendChild(hiddenContainer);
+        }
+
+        return infoGroup;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropdownButtons = document.querySelectorAll('.dropdown-button');
-        const dropdownMenus = document.querySelectorAll('.dropdown-wrapper');
+    // LUXEMBOURG AMBULANCE
+    if (isLuxembourg && hulpdienst === 'Ambulance') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
 
-        // Function to close all dropdowns
-        function closeAllDropdowns() {
-            dropdownMenus.forEach(menu => {
-                menu.classList.remove('active');
-                // Remove the event listener when the dropdown is closed
-                document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
-            });
-            dropdownButtons.forEach(button => {
-                button.classList.remove('active');
-            });
+        // Roepnummer/Kenteken
+        const roepKentekenBox = document.createElement('div');
+        roepKentekenBox.className = 'info-box';
+        roepKentekenBox.innerHTML = `
+            <div class="label">Roepnummer / Kenteken</div>
+            <div class="value">${row.Kenteken || row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepKentekenBox);
+
+        // Type Voertuig with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+
+        // Afkorting (full width)
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
         }
 
-        // Function to prevent body scrolling
-        function preventBodyScroll(e) {
-            const activeDropdown = document.querySelector('.dropdown-wrapper.active');
-            if (activeDropdown) {
-                // Check if the touch event is inside the active dropdown
-                const isInsideDropdown = activeDropdown.contains(e.target);
-                // Prevent scrolling if the touch is outside the dropdown
-                if (!isInsideDropdown) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    if (isLuxembourg && hulpdienst === 'Academies') {
+        const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (hasBijzonderheden) {
+            // When there are special details - split 50/50
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Discipline</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                </div>
+            `;
+        } else {
+            // When no special details - Discipline full width
+            infoContainer.innerHTML = `
+                <div class="info-box" style="grid-column: 1 / -1">
+                    <div class="label">Discipline</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+            `;
+        }
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // LUXEMBOURG BRANDWEER
+    if (isLuxembourg && hulpdienst === 'Brandweer') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer/Kenteken
+        const roepKentekenBox = document.createElement('div');
+        roepKentekenBox.className = 'info-box';
+        roepKentekenBox.innerHTML = `
+            <div class="label">Roepnummer / Kenteken</div>
+            <div class="value">${row.Kenteken || row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepKentekenBox);
+
+        // Type Voertuig with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+
+        // Afkorting (full width)
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    if (isLuxembourg && hulpdienst === 'Ziekenhuizen') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Postnaam (from TypeVoertuig)
+        const postnaamBox = document.createElement('div');
+        postnaamBox.className = 'info-box';
+        postnaamBox.innerHTML = `
+            <div class="label">Postnaam</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        infoContainer1.appendChild(postnaamBox);
+
+        // Adres (from Kenteken) with toggle button
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Adres</div>
+            <div class="value">${row.Kenteken || ''}</div>
+        `;
+        adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(adresBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden container for Aantal Bedden
+        if (row.Bijzonderheden) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
+            
+            const beddenBox = document.createElement('div');
+            beddenBox.className = 'info-box large';
+            beddenBox.style.gridColumn = "1 / -1";
+            beddenBox.innerHTML = `
+                <div class="label">Aantal Bedden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(beddenBox);
+            
+            infoGroup.appendChild(infoContainer2);
+        }
+
+        return infoGroup;
+    }
+
+    // BELGIAN POLICE
+    if (isBelgium && hulpdienst === 'Politie') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        // Adres (volledige breedte, gebruikt TypeVoertuig als waarde)
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.style.gridColumn = "1 / -1"; // Neemt volledige breedte in
+        adresBox.innerHTML = `
+            <div class="label">Adres</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        
+        infoContainer.appendChild(adresBox);
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // BELGIAN FIRE DEPARTMENT
+    if (isBelgium && hulpdienst === 'Brandweer') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig with toggle button
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+
+        // Afkorting (full width)
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+    
+    // BELGIAN AMBULANCE
+    if (isBelgium && hulpdienst === 'Ambulance') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Afkorting (50%)
+        const afkortingBox = document.createElement('div');
+        afkortingBox.className = 'info-box';
+        afkortingBox.innerHTML = `
+            <div class="label">Afkorting</div>
+            <div class="value">${row.Afkorting || ''}</div>
+        `;
+        infoContainer1.appendChild(afkortingBox);
+
+        // Type Voertuig (50%) MET PIJLTJE (als er bijzonderheden zijn)
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        
+        if (row.Bijzonderheden) {
+            typeVoertuigBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            typeVoertuigBox.innerHTML = `
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Verborgen sectie voor Bijzonderheden (alleen als aanwezig)
+        if (row.Bijzonderheden) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
+            
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1"; // Full width
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+            
+            infoGroup.appendChild(infoContainer2);
+        }
+
+        return infoGroup;
+    }
+
+    // BELGIAN REDDINGSBIRGADE
+    if (isBelgium && hulpdienst === 'Reddingsbrigade') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Afkorting (50%)
+        const afkortingBox = document.createElement('div');
+        afkortingBox.className = 'info-box';
+        afkortingBox.innerHTML = `
+            <div class="label">Afkorting</div>
+            <div class="value">${row.Afkorting || ''}</div>
+        `;
+        infoContainer1.appendChild(afkortingBox);
+
+        // Type Voertuig (50%) MET PIJLTJE (altijd, want er komt nog extra info)
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Verborgen sectie met Kenteken + Bijzonderheden
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Kenteken (full width)
+        if (row.Kenteken) {
+            const kentekenBox = document.createElement('div');
+            kentekenBox.className = 'info-box large';
+            kentekenBox.style.gridColumn = "1 / -1";
+            kentekenBox.innerHTML = `
+                <div class="label">Kenteken</div>
+                <div class="value">${row.Kenteken}</div>
+            `;
+            infoContainer2.appendChild(kentekenBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    if (isNederland && (hulpdienst === 'ProRail' || hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs')) {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer (50%)
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig (50%) with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden section
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Afkorting (full width) - altijd tonen als aanwezig
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Voor Rijkswaterstaat/Weginspecteurs: toon ook Bijzonderheden als full width
+        if ((hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs') && row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    // BERGINGSBEDRIJF (Nederland)
+    if (isNederland && hulpdienst === 'Bergingsbedrijf') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer (50%)
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig (50%) with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden section
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Afkorting (full width) - altijd tonen als aanwezig
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    // HOSPITALS
+    if (hulpdienst === 'Ziekenhuizen') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (isNederland) {
+            // Dutch hospitals
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Adres</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Aantal Bedden</div>
+                    <div class="value">${row.Bijzonderheden || ''}</div>
+                </div>
+            `;
+        } else {
+            // BE/LUX hospitals
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Naam</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                    <div class="label">Adres</div>
+                    <div class="value">${row.Adres || ''}</div>
+                </div>
+            `;
+            infoContainer.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+
+            if (row.Bijzonderheden) {
+                const hiddenContainer = document.createElement('div');
+                hiddenContainer.className = 'info-container toggle-section hidden';
+                hiddenContainer.innerHTML = `
+                    <div class="info-box large" style="grid-column: 1 / -1">
+                        <div class="label">Aantal Bedden</div>
+                        <div class="value">${row.Bijzonderheden}</div>
+                    </div>
+                `;
+                infoGroup.appendChild(hiddenContainer);
             }
         }
 
-        // Add event listeners to dropdown buttons
-        dropdownButtons.forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.stopPropagation();
-                const menu = this.nextElementSibling;
-                if (menu.classList.contains('active')) {
-                    menu.classList.remove('active');
-                    this.classList.remove('active');
-                    // Remove the event listener when the dropdown is closed
-                    document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
-                } else {
-                    closeAllDropdowns();
-                    menu.classList.add('active');
-                    this.classList.add('active');
-                    // Add the event listener when the dropdown is opened
-                    document.addEventListener('touchmove', preventBodyScroll, { passive: false });
-                }
-            });
-        });
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.dropdown')) {
-                closeAllDropdowns();
+    // ACADEMIES (non-LUX)
+    if (hulpdienst === 'Academies' && !isLuxembourg) {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+        infoContainer.innerHTML = `
+            <div class="info-box">
+                <div class="label">Discipline</div>
+                <div class="value">${row.Bijzonderheden || ''}</div>
+            </div>
+            <div class="info-box">
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            </div>
+        `;
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // DISPATCH CENTERS
+    if (hulpdienst === 'Meldkamers') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (isNederland) {
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Veiligheidsregio</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden || ''}</div>
+                </div>
+            `;
+        } else {
+            infoContainer.innerHTML = `
+                <div class="info-box" style="grid-column: 1 / -1">
+                    <div class="label">Adres</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+            `;
+        }
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // DEFAULT LAYOUT FOR ALL OTHER SERVICES
+    const infoContainer1 = document.createElement('div');
+    infoContainer1.className = 'info-container';
+    infoContainer1.innerHTML = `
+        <div class="info-box">
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        </div>
+        <div class="info-box">
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        </div>
+    `;
+    infoContainer1.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+    infoGroup.appendChild(infoContainer1);
+
+    const infoContainer2 = document.createElement('div');
+    infoContainer2.className = 'info-container toggle-section hidden';
+    
+    if (row.Afkorting) {
+        infoContainer2.innerHTML += `
+            <div class="info-box">
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            </div>
+        `;
+    }
+    
+    if (row.Kenteken) {
+        infoContainer2.innerHTML += `
+            <div class="info-box">
+                <div class="label">Kenteken</div>
+                <div class="value">${row.Kenteken}</div>
+            </div>
+        `;
+    }
+    
+    if (row.Bijzonderheden) {
+        infoContainer2.innerHTML += `
+            <div class="info-box large" style="grid-column: 1 / -1">
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            </div>
+        `;
+    }
+
+    if (row.Afkorting || row.Kenteken || row.Bijzonderheden) {
+        infoGroup.appendChild(infoContainer2);
+    }
+
+    return infoGroup;
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const region = urlParams;
+
+    const sheetData = await fetchDataFromGoogleSheets(region);
+    const jsonData = convertSheetDataToJSON(sheetData);
+    preprocessedDataset = preprocessDataset(jsonData);
+
+    let dropdownData;
+    if (region === 'NL') {
+        dropdownData = NLDropdown;
+        document.querySelector('a[href="../list.html?NL"]').style.color = 'var(--accent-color)';
+    } else if (region === 'BE') {
+        dropdownData = BEDropdown;
+        document.querySelector('a[href="../list.html?BE"]').style.color = 'var(--accent-color)';
+    } else if (region === 'LUX') {
+        dropdownData = LUXDropdown;
+        document.querySelector('a[href="../list.html?LUX"]').style.color = 'var(--accent-color)';
+    }
+
+    populateDropdown(hulpdienstDropdown, dropdownData.HulpdienstDropdown);
+    populateDropdown(regioDropdown, dropdownData.RegioDropdown);
+
+    initializeCustomDropdown(hulpdienstDropdown, debouncedUpdateList);
+    initializeCustomDropdown(regioDropdown, debouncedUpdateList);
+
+    const selectedDropdownValue = localStorage.getItem('selectedDropdownValue');
+    if (selectedDropdownValue) {
+        const dropdownButton = document.getElementById('hulpdienst-dropdown');
+        const dropdownMenu = dropdownButton.nextElementSibling.querySelector('.dropdown-menu');
+        const dropdownItems = dropdownMenu.querySelectorAll('li');
+
+        dropdownItems.forEach((item) => {
+            if (item.getAttribute('value') === selectedDropdownValue) {
+                dropdownButton.innerHTML = `${item.textContent} <i class="fa fa-chevron-down"></i>`;
+                dropdownButton.setAttribute('data-value', item.getAttribute('value'));
+                filterRegioDropdown(item.getAttribute('value'));
             }
         });
 
-        // Add event listeners to dropdown menu items
-        dropdownMenus.forEach(menu => {
-            menu.addEventListener('click', function (e) {
-                if (e.target.tagName === 'LI') {
-                    const button = this.previousElementSibling;
-                    // Preserve the icon while updating the text
-                    button.innerHTML = `${e.target.textContent} <i class="fa fa-chevron-down"></i>`;
-                    closeAllDropdowns();
-                }
-            });
-        });
+        localStorage.removeItem('selectedDropdownValue');
+    }
 
-        // Initialize scrollbar for both dropdowns
-        initializeScrollbars();
+    debouncedUpdateList(true);
+
+    input.addEventListener('input', debouncedUpdateList);
+
+    setTimeout(() => {
+        const loader = document.querySelector('#showbox-holder');
+
+        if (loader) {
+            loader.classList.add('fade-out');
+
+            document.documentElement.style.overflow = '';
+
+            if (typeof window.updateScrollbar === 'function') {
+                window.updateScrollbar();
+            }
+
+            setTimeout(() => {
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+            }, 600);
+        }
+    }, 250);
+});
+
+async function fetchDataFromGoogleSheets(region) {
+    const response = await fetch(`/fetch-sheet?region=${region}`);
+    const data = await response.json();
+    return data.values;
+}
+
+function debouncedUpdateInfoGroupHeight() {
+    const infoGroups = document.querySelectorAll('.info-group');
+    infoGroups.forEach((infoGroup) => {
+        const infoBox = infoGroup.querySelector('.info-box');
+        if (infoBox) {
+            let infoBoxHeight = infoBox.offsetHeight;
+
+            if (window.innerWidth < 350) {
+                infoBox.style.minHeight = `${MIN_INFO_BOX_HEIGHT}px`;
+                infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT);
+            } else {
+                infoBox.style.minHeight = '';
+            }
+
+            const newHeight = infoBoxHeight + 4;
+            infoGroup.style.height = `${newHeight}px`;
+        }
     });
-
-    function initializeScrollbars() {
-        document.querySelectorAll('.dropdown-wrapper').forEach(dropdownWrapper => {
-            const dropdownMenu = dropdownWrapper.querySelector('.dropdown-menu');
-            const scrollbarThumb = dropdownWrapper.querySelector('.scrollbar-thumb');
-            const customScrollbar = dropdownWrapper.querySelector('.custom-scrollbar');
-            let isDragging = false;
-
-            // Update scrollbar thumb height based on content
-            function updateScrollbarThumb() {
-                const menuHeight = dropdownMenu.clientHeight;
-                const menuScrollHeight = dropdownMenu.scrollHeight;
-                // Calculate the thumb height as a percentage of the visible area
-                const thumbHeight = (menuHeight / menuScrollHeight) * menuHeight;
-                // Ensure the thumb has a minimum height (e.g., 20px) for usability
-                const minThumbHeight = 20;
-                scrollbarThumb.style.height = `${Math.max(thumbHeight, minThumbHeight)}px`;
-            }
-
-            // Update scrollbar thumb position on scroll
-            dropdownMenu.addEventListener("scroll", () => {
-                const scrollTop = dropdownMenu.scrollTop;
-                const maxScrollTop = dropdownMenu.scrollHeight - dropdownMenu.clientHeight;
-                // Calculate the thumb position based on the scroll progress
-                const thumbPosition = (scrollTop / maxScrollTop) * (customScrollbar.clientHeight - scrollbarThumb.clientHeight);
-                scrollbarThumb.style.top = `${thumbPosition}px`;
-            });
-
-            // Drag functionality for scrollbar thumb
-            scrollbarThumb.addEventListener("mousedown", (e) => {
-                isDragging = true;
-                document.body.style.userSelect = "none";
-                document.body.style.pointerEvents = "none";
-                scrollbarThumb.style.pointerEvents = "none";
-                const initialY = e.clientY;
-                const initialThumbPosition = parseFloat(scrollbarThumb.style.top || 0);
-
-                function drag(e) {
-                    if (!isDragging) return;
-                    const deltaY = e.clientY - initialY;
-                    const newThumbPosition = initialThumbPosition + deltaY;
-                    const maxThumbPosition = customScrollbar.clientHeight - scrollbarThumb.clientHeight;
-                    const clampedPosition = Math.min(Math.max(newThumbPosition, 0), maxThumbPosition);
-                    scrollbarThumb.style.top = `${clampedPosition}px`;
-                    // Calculate the scroll position based on the thumb position
-                    const scrollTop = (clampedPosition / maxThumbPosition) * (dropdownMenu.scrollHeight - dropdownMenu.clientHeight);
-                    dropdownMenu.scrollTop = scrollTop;
-                }
-
-                function stopDrag() {
-                    isDragging = false;
-                    document.body.style.userSelect = "";
-                    scrollbarThumb.style.pointerEvents = "";
-                    document.body.style.pointerEvents = "";
-                    document.removeEventListener("mousemove", drag);
-                    document.removeEventListener("mouseup", stopDrag);
-                }
-
-                document.addEventListener("mousemove", drag);
-                document.addEventListener("mouseup", stopDrag);
-            });
-
-            // Initialize scrollbar thumb height
-            updateScrollbarThumb();
-
-            // Update scrollbar thumb height when the dropdown content changes
-            new MutationObserver(updateScrollbarThumb).observe(dropdownMenu, {
-                childList: true,
-                subtree: true,
-            });
-        });
-    }
-
-    function updAndClear() {
-        count = 100;
-        debouncedUpdateList(true);
-    }
-</script>
+}

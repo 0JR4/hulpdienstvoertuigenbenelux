@@ -193,40 +193,45 @@ function filterRegioDropdown(hulpdienstValue) {
     const regioDropdownMenu = regioDropdownButton.nextElementSibling.querySelector('.dropdown-menu');
     regioDropdownMenu.innerHTML = ''; // Clear existing options
 
+    // Bepaal welke dropdown data we moeten gebruiken op basis van URL parameter
+    let dropdownData;
     if (urlParams === 'NL') {
         dropdownData = NLDropdown;
     } else if (urlParams === 'BE') {
         dropdownData = BEDropdown;
+        
+        // Voor België tonen we altijd alle regio's zonder filtering
+        populateDropdown(regioDropdownButton, dropdownData.RegioDropdown);
+        return;
     } else if (urlParams === 'LUX') {
         dropdownData = LUXDropdown;
-    }
-
-    // For Luxembourg, we'll keep it simple since there's only one region
-    if (urlParams === 'LUX') {
+        
+        // Voor Luxemburg tonen we altijd alle regio's zonder filtering
         populateDropdown(regioDropdownButton, dropdownData.RegioDropdown);
         return;
     }
 
+    // Alleen voor Nederland doen we specifieke filtering
     let availableRegions = [];
 
     if (hulpdienstValue === 'all') {
-        // For "Alle Hulpdiensten", show all regions from the dropdown data
+        // Voor "Alle Hulpdiensten", toon alle regio's
         availableRegions = dropdownData.RegioDropdown;
     } else {
-        // Find all unique regions that exist in the preprocessed dataset for this hulpdienst
+        // Vind alle unieke regio's die bestaan in de dataset voor deze hulpdienst
         const regionsInData = [...new Set(
             preprocessedDataset
                 .filter(item => item.Hulpdienst === hulpdienstValue)
                 .map(item => item.Regio)
         )];
 
-        // Now filter the dropdown data to only include regions that exist in the data
+        // Filter de dropdown data om alleen regio's te tonen die in de data bestaan
         availableRegions = dropdownData.RegioDropdown.filter(region => 
             region.value === 'all' || regionsInData.includes(region.value)
         );
 
-        // If no specific regions found (empty array), fall back to showing all regions
-        if (availableRegions.length <= 1) { // Only "all" option
+        // Als geen specifieke regio's gevonden (behalve "all"), toon dan standaard regio's
+        if (availableRegions.length <= 1) {
             availableRegions = dropdownData.RegioDropdown.filter(region => 
                 region.value === 'all' || 
                 (!region.text.includes('(Pol)') && 
@@ -237,7 +242,7 @@ function filterRegioDropdown(hulpdienstValue) {
         }
     }
 
-    // Special cases for Politie, RWS, KMAR
+    // Speciale gevallen voor Politie, RWS, KMAR in Nederland
     if (hulpdienstValue === 'Politie') {
         availableRegions = dropdownData.RegioDropdown.filter(
             region => region.value === 'all' || region.text.includes('(Pol)') || region.text.includes('(Politie)')
@@ -252,11 +257,8 @@ function filterRegioDropdown(hulpdienstValue) {
         );
     }
 
-    // Populate the dropdown with the filtered regions
+    // Vul de dropdown met de gefilterde regio's
     populateDropdown(regioDropdownButton, availableRegions);
-
-    // Initialize the custom dropdown functionality
-    initializeCustomDropdown(regioDropdownButton, debouncedUpdateList);
 }
 
 
@@ -554,289 +556,102 @@ function getLayoutConfig(hulpdienst, isNederland) {
     }
 }
 
-function createInfoGroup(row) {
-    const infoGroup = document.createElement('div');
-    infoGroup.className = 'info-group';
+    function createInfoGroup(row) {
+        const infoGroup = document.createElement('div');
+        infoGroup.className = 'info-group';
 
-    const hulpdienstDropdown = document.getElementById('hulpdienst-dropdown');
-    const hulpdienstValue = hulpdienstDropdown.getAttribute('data-value') || 'all';
-    const isNederland = urlParams === 'NL';
-    const isBelgium = urlParams === 'BE';
-    const isLuxembourg = urlParams === 'LUX';
+        const isNederland = urlParams === 'NL';
+        const isBelgium = urlParams === 'BE';
+        const isLuxembourg = urlParams === 'LUX';
+        const hulpdienst = row.Hulpdienst; // Get the actual service from the row data
 
-    // Bepaal de layout configuratie op basis van hulpdienst en land
-    const layoutConfig = getLayoutConfig(hulpdienstValue, isNederland);
+    // LUXEMBOURG MELDKAMERS
+    if (isLuxembourg && hulpdienst === 'Meldkamers') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
 
-    if (hulpdienstValue === 'Ziekenhuizen') {
-        if (isNederland) {
-            const infoContainer = document.createElement('div');
-            infoContainer.className = 'info-container';
-            // Adres
-            const adresBox = document.createElement('div');
-            adresBox.className = 'info-box';
-            const adresLabel = document.createElement('div');
-            adresLabel.className = 'label';
-            adresLabel.textContent = 'Adres';
-            const adresValue = document.createElement('div');
-            adresValue.className = 'value';
-            adresValue.textContent = row.TypeVoertuig || '';
-            adresBox.appendChild(adresLabel);
-            adresBox.appendChild(adresValue);
-            infoContainer.appendChild(adresBox);
-            // Aantal Bedden
-            const beddenBox = document.createElement('div');
-            beddenBox.className = 'info-box';
-            const beddenLabel = document.createElement('div');
-            beddenLabel.className = 'label';
-            beddenLabel.textContent = 'Aantal Bedden';
-            const beddenValue = document.createElement('div');
-            beddenValue.className = 'value';
-            beddenValue.textContent = row.Bijzonderheden || '';
-            beddenBox.appendChild(beddenLabel);
-            beddenBox.appendChild(beddenValue);
-            infoContainer.appendChild(beddenBox);
+        // Discipline (from TypeVoertuig) - full width
+        infoContainer.innerHTML = `
+            <div class="info-box" style="grid-column: 1 / -1">
+                <div class="label">Discipline</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            </div>
+        `;
 
-            infoGroup.appendChild(infoContainer);
-        } else if (isBelgium || isLuxembourg) {
-            // België/Luxembourg ziekenhuizen layout
-            const infoContainer = document.createElement('div');
-            infoContainer.className = 'info-container';
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
 
-            // Adres (bovenaan)
-            const postnaamBox = document.createElement('div');
-            postnaamBox.className = 'info-box';
-            const postnaamLabel = document.createElement('div');
-            postnaamLabel.className = 'label';
-            postnaamLabel.textContent = 'Postnaam';
-            const postnaamValue = document.createElement('div');
-            postnaamValue.className = 'value';
-            postnaamValue.textContent = row.TypeVoertuig || '';
-            postnaamBox.appendChild(postnaamLabel);
-            postnaamBox.appendChild(postnaamValue);
-            infoContainer.appendChild(postnaamBox);
-
-            // Aantal Bedden met toggle button
-            const adresBox = document.createElement('div');
-            adresBox.className = 'info-box';
-            
-            const adresContent = document.createElement('div');
-            adresContent.className = 'bedden-content';
-            
-            const toggleBtn = document.createElement('div');
-            toggleBtn.className = 'toggle-btn';
-            toggleBtn.innerHTML = '<i class="fa fa-chevron-down"></i>';
-            toggleBtn.onclick = function() { toggleDetails(this); };
-            
-            const adresLabel = document.createElement('div');
-            adresLabel.className = 'label';
-            adresLabel.textContent = 'Adres';
-            
-            const adresValue = document.createElement('div');
-            adresValue.className = 'value';
-            adresValue.textContent = row.Kenteken || '';
-            
-            adresContent.appendChild(adresLabel);
-            adresContent.appendChild(adresValue);
-            
-            adresBox.appendChild(toggleBtn);
-            adresBox.appendChild(adresContent);
-            infoContainer.appendChild(adresBox);
-
-            infoGroup.appendChild(infoContainer);
-
-            // Verborgen sectie met Postnaam
-            const extraContainer = document.createElement('div');
-            extraContainer.className = 'info-container toggle-section hidden';
-            
-            // Postnaam (volledige breedte)
-            const beddenBox = document.createElement('div');
-            beddenBox.className = 'info-box';
-            beddenBox.style.gridColumn = "1 / -1";
-            const beddenLabel = document.createElement('div');
-            beddenLabel.className = 'label';
-            beddenLabel.textContent = 'Aantal Bedden';
-            const beddenValue = document.createElement('div');
-            beddenValue.className = 'value';
-            beddenValue.textContent = row.Kenteken || '';
-            beddenBox.appendChild(beddenLabel);
-            beddenBox.appendChild(beddenValue);
-            extraContainer.appendChild(beddenBox);
-
-            infoGroup.appendChild(extraContainer);
+    // LUXEMBOURG POLICE
+    if (isLuxembourg && hulpdienst === 'Politie') {
+        const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        
+        // Adres box (full width, toont TypeVoertuig waarde)
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.style.gridColumn = "1 / -1"; // Forceer full width
+        
+        if (hasBijzonderheden) {
+            // Met pijltje voor bijzonderheden
+            adresBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            // Zonder pijltje
+            adresBox.innerHTML = `
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
         }
-    } else if (hulpdienstValue === 'Academies') {
-        // Speciale layout voor Academies (geldt voor zowel NL als BE)
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
+        infoGroup.appendChild(adresBox);
 
-        // Discipline (eerst)
-        const disciplineBox = document.createElement('div');
-        disciplineBox.className = 'info-box';
-        const disciplineLabel = document.createElement('div');
-        disciplineLabel.className = 'label';
-        disciplineLabel.textContent = 'Discipline';
-        const disciplineValue = document.createElement('div');
-        disciplineValue.className = 'value';
-        disciplineValue.textContent = row.Bijzonderheden || '';
-        disciplineBox.appendChild(disciplineLabel);
-        disciplineBox.appendChild(disciplineValue);
-        infoContainer.appendChild(disciplineBox);
+        // Bijzonderheden (verborgen sectie, ook full width)
+        if (hasBijzonderheden) {
+            const hiddenContainer = document.createElement('div');
+            hiddenContainer.className = 'info-container toggle-section hidden';
+            hiddenContainer.style.gridColumn = "1 / -1"; // Full width
+            
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            hiddenContainer.appendChild(bijzonderhedenBox);
+            
+            infoGroup.appendChild(hiddenContainer);
+        }
 
-        // Adres (daarna)
-        const adresBox = document.createElement('div');
-        adresBox.className = 'info-box';
-        const adresLabel = document.createElement('div');
-        adresLabel.className = 'label';
-        adresLabel.textContent = 'Adres';
-        const adresValue = document.createElement('div');
-        adresValue.className = 'value';
-        adresValue.textContent = row.TypeVoertuig || '';
-        adresBox.appendChild(adresLabel);
-        adresBox.appendChild(adresValue);
-        infoContainer.appendChild(adresBox);
+        return infoGroup;
+    }
 
-        infoGroup.appendChild(infoContainer);
-    } else if (hulpdienstValue === 'Meldkamers' && isNederland) {
-        // Speciale layout voor NL Meldkamers
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-
-        // Veiligheidsregio
-        const regioBox = document.createElement('div');
-        regioBox.className = 'info-box';
-        const regioLabel = document.createElement('div');
-        regioLabel.className = 'label';
-        regioLabel.textContent = 'Veiligheidsregio';
-        const regioValue = document.createElement('div');
-        regioValue.className = 'value';
-        regioValue.textContent = row.TypeVoertuig || '';
-        regioBox.appendChild(regioLabel);
-        regioBox.appendChild(regioValue);
-        infoContainer.appendChild(regioBox);
-
-        // Adres
-        const adresBox = document.createElement('div');
-        adresBox.className = 'info-box';
-        const adresLabel = document.createElement('div');
-        adresLabel.className = 'label';
-        adresLabel.textContent = 'Bijzonderheden';
-        const adresValue = document.createElement('div');
-        adresValue.className = 'value';
-        adresValue.textContent = row.Bijzonderheden || '';
-        adresBox.appendChild(adresLabel);
-        adresBox.appendChild(adresValue);
-        infoContainer.appendChild(adresBox);
-
-        infoGroup.appendChild(infoContainer);
-    } else if (hulpdienstValue === 'Meldkamers' && !isNederland) {
-        // Speciale layout voor BE/LUX Meldkamers (alleen Adres)
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-
-        // Adres
-        const adresBox = document.createElement('div');
-        adresBox.className = 'info-box';
-        adresBox.style.gridColumn = "1 / -1";
-        const adresLabel = document.createElement('div');
-        adresLabel.className = 'label';
-        adresLabel.textContent = 'Adres';
-        const adresValue = document.createElement('div');
-        adresValue.className = 'value';
-        adresValue.textContent = row.TypeVoertuig || '';
-        adresBox.appendChild(adresLabel);
-        adresBox.appendChild(adresValue);
-        infoContainer.appendChild(adresBox);
-
-        infoGroup.appendChild(infoContainer);
-    } else if (hulpdienstValue === 'Politie' && !isNederland) {
-        // Speciale layout voor BE/LUX Politie
+    // LUXEMBOURG AMBULANCE
+    if (isLuxembourg && hulpdienst === 'Ambulance') {
         const infoContainer1 = document.createElement('div');
         infoContainer1.className = 'info-container';
 
-        // Override the grid layout with normal block behavior
-        infoContainer1.style.display = 'block';
-        infoContainer1.style.gridTemplateColumns = 'initial';
+        // Roepnummer/Kenteken
+        const roepKentekenBox = document.createElement('div');
+        roepKentekenBox.className = 'info-box';
+        roepKentekenBox.innerHTML = `
+            <div class="label">Roepnummer / Kenteken</div>
+            <div class="value">${row.Kenteken || row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepKentekenBox);
 
-        // Postnaam (vervangt Type Voertuig)
-        const postnaamBox = document.createElement('div');
-        postnaamBox.className = 'info-box';
-        const postnaamLabel = document.createElement('div');
-        postnaamLabel.className = 'label';
-        postnaamLabel.textContent = 'Postnaam';
-        const postnaamValue = document.createElement('div');
-        postnaamValue.className = 'value';
-        postnaamValue.textContent = row.TypeVoertuig || '';
-        postnaamBox.appendChild(postnaamLabel);
-        postnaamBox.appendChild(postnaamValue);
-        infoContainer1.appendChild(postnaamBox);
-
-        infoGroup.appendChild(infoContainer1);
-    } else if (hulpdienstValue === 'Ambulance' && !isNederland) {
-        // Speciale layout voor BE/LUX Ambulance
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-
-        // Roepnaam
-        const roepnaamBox = document.createElement('div');
-        roepnaamBox.className = 'info-box';
-        const roepnaamLabel = document.createElement('div');
-        roepnaamLabel.className = 'label';
-        roepnaamLabel.textContent = 'Roepnaam';
-        const roepnaamValue = document.createElement('div');
-        roepnaamValue.className = 'value';
-        roepnaamValue.textContent = row.TypeVoertuig || '';
-        roepnaamBox.appendChild(roepnaamLabel);
-        roepnaamBox.appendChild(roepnaamValue);
-        infoContainer.appendChild(roepnaamBox);
-
-        // Type Voertuig
+        // Type Voertuig with toggle
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
-        const typeVoertuigLabel = document.createElement('div');
-        typeVoertuigLabel.className = 'label';
-        typeVoertuigLabel.textContent = 'Type Voertuig';
-        const typeVoertuigValue = document.createElement('div');
-        typeVoertuigValue.className = 'value';
-        typeVoertuigValue.textContent = row.Afkorting || '';
-        typeVoertuigBox.appendChild(typeVoertuigLabel);
-        typeVoertuigBox.appendChild(typeVoertuigValue);
-        infoContainer.appendChild(typeVoertuigBox);
-
-        infoGroup.appendChild(infoContainer);
-    } else if (isLuxembourg) {
-        // Special layout for Luxembourg
-        const infoContainer1 = document.createElement('div');
-        infoContainer1.className = 'info-container';
-
-        // Roepnummer/Kenteken box
-        const roepnummerBox = document.createElement('div');
-        roepnummerBox.className = 'info-box';
-        const roepnummerLabel = document.createElement('div');
-        roepnummerLabel.className = 'label';
-        roepnummerLabel.textContent = 'Roepnummer / Kenteken';
-        const roepnummerValue = document.createElement('div');
-        roepnummerValue.className = 'value';
-        roepnummerValue.textContent = row.Kenteken || row.Roepnummer || '';
-        roepnummerBox.appendChild(roepnummerLabel);
-        roepnummerBox.appendChild(roepnummerValue);
-        infoContainer1.appendChild(roepnummerBox);
-
-        // Type Voertuig box
-        const typeVoertuigBox = document.createElement('div');
-        typeVoertuigBox.className = 'info-box';
-        const toggleBtn = document.createElement('div');
-        toggleBtn.className = 'toggle-btn';
-        toggleBtn.innerHTML = '<i class="fa fa-chevron-down"></i>';
-        toggleBtn.onclick = function() { toggleDetails(this); };
-        const typeVoertuigLabel = document.createElement('div');
-        typeVoertuigLabel.className = 'label';
-        typeVoertuigLabel.textContent = 'Type Voertuig';
-        const typeVoertuigValue = document.createElement('div');
-        typeVoertuigValue.className = 'value';
-        typeVoertuigValue.textContent = row.TypeVoertuig || '';
-        typeVoertuigBox.appendChild(toggleBtn);
-        typeVoertuigBox.appendChild(typeVoertuigLabel);
-        typeVoertuigBox.appendChild(typeVoertuigValue);
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
         infoContainer1.appendChild(typeVoertuigBox);
 
         infoGroup.appendChild(infoContainer1);
@@ -845,70 +660,87 @@ function createInfoGroup(row) {
         infoContainer2.className = 'info-container toggle-section hidden';
 
         // Afkorting (full width)
-        const afkortingBox = document.createElement('div');
-        afkortingBox.className = 'info-box large';
-        afkortingBox.style.gridColumn = "1 / -1";
-        const afkortingLabel = document.createElement('div');
-        afkortingLabel.className = 'label';
-        afkortingLabel.textContent = 'Afkorting';
-        const afkortingValue = document.createElement('div');
-        afkortingValue.className = 'value';
-        afkortingValue.textContent = row.Afkorting || '';
-        afkortingBox.appendChild(afkortingLabel);
-        afkortingBox.appendChild(afkortingValue);
-        infoContainer2.appendChild(afkortingBox);
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
 
         // Bijzonderheden (full width)
-        if (row.Bijzonderheden && row.Bijzonderheden.trim() !== '') {
+        if (row.Bijzonderheden) {
             const bijzonderhedenBox = document.createElement('div');
             bijzonderhedenBox.className = 'info-box large';
             bijzonderhedenBox.style.gridColumn = "1 / -1";
-            const bijzonderhedenLabel = document.createElement('div');
-            bijzonderhedenLabel.className = 'label';
-            bijzonderhedenLabel.textContent = 'Bijzonderheden';
-            const bijzonderhedenValue = document.createElement('div');
-            bijzonderhedenValue.className = 'value';
-            bijzonderhedenValue.textContent = row.Bijzonderheden || '';
-            bijzonderhedenBox.appendChild(bijzonderhedenLabel);
-            bijzonderhedenBox.appendChild(bijzonderhedenValue);
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
             infoContainer2.appendChild(bijzonderhedenBox);
         }
 
         infoGroup.appendChild(infoContainer2);
-    } else {
-        // Standaard layout voor alle andere gevallen
+        return infoGroup;
+    }
+
+    if (isLuxembourg && hulpdienst === 'Academies') {
+        const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (hasBijzonderheden) {
+            // When there are special details - split 50/50
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Discipline</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                </div>
+            `;
+        } else {
+            // When no special details - Discipline full width
+            infoContainer.innerHTML = `
+                <div class="info-box" style="grid-column: 1 / -1">
+                    <div class="label">Discipline</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+            `;
+        }
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // LUXEMBOURG BRANDWEER
+    if (isLuxembourg && hulpdienst === 'Brandweer') {
         const infoContainer1 = document.createElement('div');
         infoContainer1.className = 'info-container';
 
-        // Roepnummer box
-        const roepnummerBox = document.createElement('div');
-        roepnummerBox.className = 'info-box';
-        const roepnummerLabel = document.createElement('div');
-        roepnummerLabel.className = 'label';
-        roepnummerLabel.textContent = 'Roepnummer';
-        const roepnummerValue = document.createElement('div');
-        roepnummerValue.className = 'value';
-        roepnummerValue.textContent = row.Roepnummer || '';
-        roepnummerBox.appendChild(roepnummerLabel);
-        roepnummerBox.appendChild(roepnummerValue);
-        infoContainer1.appendChild(roepnummerBox);
+        // Roepnummer/Kenteken
+        const roepKentekenBox = document.createElement('div');
+        roepKentekenBox.className = 'info-box';
+        roepKentekenBox.innerHTML = `
+            <div class="label">Roepnummer / Kenteken</div>
+            <div class="value">${row.Kenteken || row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepKentekenBox);
 
-        // Type Voertuig box
+        // Type Voertuig with toggle
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
-        const toggleBtn = document.createElement('div');
-        toggleBtn.className = 'toggle-btn';
-        toggleBtn.innerHTML = '<i class="fa fa-chevron-down"></i>';
-        toggleBtn.onclick = function() { toggleDetails(this); };
-        const typeVoertuigLabel = document.createElement('div');
-        typeVoertuigLabel.className = 'label';
-        typeVoertuigLabel.textContent = layoutConfig.typeVoertuigLabel || 'Type Voertuig';
-        const typeVoertuigValue = document.createElement('div');
-        typeVoertuigValue.className = 'value';
-        typeVoertuigValue.textContent = row.TypeVoertuig || '';
-        typeVoertuigBox.appendChild(toggleBtn);
-        typeVoertuigBox.appendChild(typeVoertuigLabel);
-        typeVoertuigBox.appendChild(typeVoertuigValue);
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
         infoContainer1.appendChild(typeVoertuigBox);
 
         infoGroup.appendChild(infoContainer1);
@@ -916,69 +748,537 @@ function createInfoGroup(row) {
         const infoContainer2 = document.createElement('div');
         infoContainer2.className = 'info-container toggle-section hidden';
 
-        // Afkorting
-        const afkortingBox = document.createElement('div');
-        afkortingBox.className = 'info-box';
-        const afkortingLabel = document.createElement('div');
-        afkortingLabel.className = 'label';
-        afkortingLabel.textContent = 'Afkorting';
-        const afkortingValue = document.createElement('div');
-        afkortingValue.className = 'value';
-        afkortingValue.textContent = row.Afkorting || '';
-        afkortingBox.appendChild(afkortingLabel);
-        afkortingBox.appendChild(afkortingValue);
-        infoContainer2.appendChild(afkortingBox);
+        // Afkorting (full width)
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
 
-        // Kenteken
-        const kentekenBox = document.createElement('div');
-        kentekenBox.className = 'info-box';
-        const kentekenLabel = document.createElement('div');
-        kentekenLabel.className = 'label';
-        kentekenLabel.textContent = layoutConfig.kentekenLabel || 'Kenteken';
-        const kentekenValue = document.createElement('div');
-        kentekenValue.className = 'value';
-        kentekenValue.textContent = row.Kenteken || '';
-        kentekenBox.appendChild(kentekenLabel);
-        kentekenBox.appendChild(kentekenValue);
-        infoContainer2.appendChild(kentekenBox);
-
-        // Bijzonderheden
-        if (row.Bijzonderheden && row.Bijzonderheden.trim() !== '') {
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
             const bijzonderhedenBox = document.createElement('div');
             bijzonderhedenBox.className = 'info-box large';
-            const bijzonderhedenLabel = document.createElement('div');
-            bijzonderhedenLabel.className = 'label';
-            bijzonderhedenLabel.textContent = 'Bijzonderheden';
-            const bijzonderhedenValue = document.createElement('div');
-            bijzonderhedenValue.className = 'value';
-            bijzonderhedenValue.textContent = row.Bijzonderheden || '';
-            bijzonderhedenBox.appendChild(bijzonderhedenLabel);
-            bijzonderhedenBox.appendChild(bijzonderhedenValue);
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
             infoContainer2.appendChild(bijzonderhedenBox);
         }
 
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    if (isLuxembourg && hulpdienst === 'Ziekenhuizen') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Postnaam (from TypeVoertuig)
+        const postnaamBox = document.createElement('div');
+        postnaamBox.className = 'info-box';
+        postnaamBox.innerHTML = `
+            <div class="label">Postnaam</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        infoContainer1.appendChild(postnaamBox);
+
+        // Adres (from Kenteken) with toggle button
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Adres</div>
+            <div class="value">${row.Kenteken || ''}</div>
+        `;
+        adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(adresBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden container for Aantal Bedden
+        if (row.Bijzonderheden) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
+            
+            const beddenBox = document.createElement('div');
+            beddenBox.className = 'info-box large';
+            beddenBox.style.gridColumn = "1 / -1";
+            beddenBox.innerHTML = `
+                <div class="label">Aantal Bedden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(beddenBox);
+            
+            infoGroup.appendChild(infoContainer2);
+        }
+
+        return infoGroup;
+    }
+
+    // BELGIAN POLICE
+    if (isBelgium && hulpdienst === 'Politie') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        // Adres (volledige breedte, gebruikt TypeVoertuig als waarde)
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        adresBox.style.gridColumn = "1 / -1"; // Neemt volledige breedte in
+        adresBox.innerHTML = `
+            <div class="label">Adres</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        
+        infoContainer.appendChild(adresBox);
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // BELGIAN FIRE DEPARTMENT
+    if (isBelgium && hulpdienst === 'Brandweer') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig with toggle button
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+
+        // Afkorting (full width)
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+    
+    // BELGIAN AMBULANCE
+    if (isBelgium && hulpdienst === 'Ambulance') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Afkorting (50%)
+        const afkortingBox = document.createElement('div');
+        afkortingBox.className = 'info-box';
+        afkortingBox.innerHTML = `
+            <div class="label">Afkorting</div>
+            <div class="value">${row.Afkorting || ''}</div>
+        `;
+        infoContainer1.appendChild(afkortingBox);
+
+        // Type Voertuig (50%) MET PIJLTJE (als er bijzonderheden zijn)
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        
+        if (row.Bijzonderheden) {
+            typeVoertuigBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            typeVoertuigBox.innerHTML = `
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Verborgen sectie voor Bijzonderheden (alleen als aanwezig)
+        if (row.Bijzonderheden) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
+            
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1"; // Full width
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+            
+            infoGroup.appendChild(infoContainer2);
+        }
+
+        return infoGroup;
+    }
+
+    // BELGIAN REDDINGSBIRGADE
+    if (isBelgium && hulpdienst === 'Reddingsbrigade') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Afkorting (50%)
+        const afkortingBox = document.createElement('div');
+        afkortingBox.className = 'info-box';
+        afkortingBox.innerHTML = `
+            <div class="label">Afkorting</div>
+            <div class="value">${row.Afkorting || ''}</div>
+        `;
+        infoContainer1.appendChild(afkortingBox);
+
+        // Type Voertuig (50%) MET PIJLTJE (altijd, want er komt nog extra info)
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Verborgen sectie met Kenteken + Bijzonderheden
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Kenteken (full width)
+        if (row.Kenteken) {
+            const kentekenBox = document.createElement('div');
+            kentekenBox.className = 'info-box large';
+            kentekenBox.style.gridColumn = "1 / -1";
+            kentekenBox.innerHTML = `
+                <div class="label">Kenteken</div>
+                <div class="value">${row.Kenteken}</div>
+            `;
+            infoContainer2.appendChild(kentekenBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    if (isNederland && (hulpdienst === 'ProRail' || hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs')) {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer (50%)
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig (50%) with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden section
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Afkorting (full width) - altijd tonen als aanwezig
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Voor Rijkswaterstaat/Weginspecteurs: toon ook Bijzonderheden als full width
+        if ((hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs') && row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    // BERGINGSBEDRIJF (Nederland)
+    if (isNederland && hulpdienst === 'Bergingsbedrijf') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Roepnummer (50%)
+        const roepnummerBox = document.createElement('div');
+        roepnummerBox.className = 'info-box';
+        roepnummerBox.innerHTML = `
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(roepnummerBox);
+
+        // Type Voertuig (50%) with toggle
+        const typeVoertuigBox = document.createElement('div');
+        typeVoertuigBox.className = 'info-box';
+        typeVoertuigBox.innerHTML = `
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        infoContainer1.appendChild(typeVoertuigBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Hidden section
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        // Afkorting (full width) - altijd tonen als aanwezig
+        if (row.Afkorting) {
+            const afkortingBox = document.createElement('div');
+            afkortingBox.className = 'info-box large';
+            afkortingBox.style.gridColumn = "1 / -1";
+            afkortingBox.innerHTML = `
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            `;
+            infoContainer2.appendChild(afkortingBox);
+        }
+
+        // Bijzonderheden (full width)
+        if (row.Bijzonderheden) {
+            const bijzonderhedenBox = document.createElement('div');
+            bijzonderhedenBox.className = 'info-box large';
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
+            bijzonderhedenBox.innerHTML = `
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            `;
+            infoContainer2.appendChild(bijzonderhedenBox);
+        }
+
+        infoGroup.appendChild(infoContainer2);
+        return infoGroup;
+    }
+
+    // HOSPITALS
+    if (hulpdienst === 'Ziekenhuizen') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (isNederland) {
+            // Dutch hospitals
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Adres</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Aantal Bedden</div>
+                    <div class="value">${row.Bijzonderheden || ''}</div>
+                </div>
+            `;
+        } else {
+            // BE/LUX hospitals
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Naam</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                    <div class="label">Adres</div>
+                    <div class="value">${row.Adres || ''}</div>
+                </div>
+            `;
+            infoContainer.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+
+            if (row.Bijzonderheden) {
+                const hiddenContainer = document.createElement('div');
+                hiddenContainer.className = 'info-container toggle-section hidden';
+                hiddenContainer.innerHTML = `
+                    <div class="info-box large" style="grid-column: 1 / -1">
+                        <div class="label">Aantal Bedden</div>
+                        <div class="value">${row.Bijzonderheden}</div>
+                    </div>
+                `;
+                infoGroup.appendChild(hiddenContainer);
+            }
+        }
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // ACADEMIES (non-LUX)
+    if (hulpdienst === 'Academies' && !isLuxembourg) {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+        infoContainer.innerHTML = `
+            <div class="info-box">
+                <div class="label">Discipline</div>
+                <div class="value">${row.Bijzonderheden || ''}</div>
+            </div>
+            <div class="info-box">
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            </div>
+        `;
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // DISPATCH CENTERS
+    if (hulpdienst === 'Meldkamers') {
+        const infoContainer = document.createElement('div');
+        infoContainer.className = 'info-container';
+
+        if (isNederland) {
+            infoContainer.innerHTML = `
+                <div class="info-box">
+                    <div class="label">Veiligheidsregio</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden || ''}</div>
+                </div>
+            `;
+        } else {
+            infoContainer.innerHTML = `
+                <div class="info-box" style="grid-column: 1 / -1">
+                    <div class="label">Adres</div>
+                    <div class="value">${row.TypeVoertuig || ''}</div>
+                </div>
+            `;
+        }
+
+        infoGroup.appendChild(infoContainer);
+        return infoGroup;
+    }
+
+    // DEFAULT LAYOUT FOR ALL OTHER SERVICES
+    const infoContainer1 = document.createElement('div');
+    infoContainer1.className = 'info-container';
+    infoContainer1.innerHTML = `
+        <div class="info-box">
+            <div class="label">Roepnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        </div>
+        <div class="info-box">
+            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        </div>
+    `;
+    infoContainer1.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+    infoGroup.appendChild(infoContainer1);
+
+    const infoContainer2 = document.createElement('div');
+    infoContainer2.className = 'info-container toggle-section hidden';
+    
+    if (row.Afkorting) {
+        infoContainer2.innerHTML += `
+            <div class="info-box">
+                <div class="label">Afkorting</div>
+                <div class="value">${row.Afkorting}</div>
+            </div>
+        `;
+    }
+    
+    if (row.Kenteken) {
+        infoContainer2.innerHTML += `
+            <div class="info-box">
+                <div class="label">Kenteken</div>
+                <div class="value">${row.Kenteken}</div>
+            </div>
+        `;
+    }
+    
+    if (row.Bijzonderheden) {
+        infoContainer2.innerHTML += `
+            <div class="info-box large" style="grid-column: 1 / -1">
+                <div class="label">Bijzonderheden</div>
+                <div class="value">${row.Bijzonderheden}</div>
+            </div>
+        `;
+    }
+
+    if (row.Afkorting || row.Kenteken || row.Bijzonderheden) {
         infoGroup.appendChild(infoContainer2);
     }
 
     return infoGroup;
 }
-
-scrollableContent.addEventListener('scroll', () => {
-    if (isScrollting || allRowsRendered) return;
-    isScrollting = true;
-    clearTimeout(scrollTimeout);
-
-    scrollTimeout = setTimeout(() => {
-        if (
-            scrollableContent.scrollTop + scrollableContent.clientHeight >= scrollableContent.scrollHeight - 5 &&
-            !allRowsRendered &&
-            filteredData.length > offset
-        ) {
-            generateVisibleRows(filteredData, count, false);
-        }
-        isScrollting = false;
-    }, 200);
-});
 
 document.addEventListener('DOMContentLoaded', async function () {
     const region = urlParams;

@@ -191,74 +191,46 @@ function populateDropdown(dropdownButton, dropdownData) {
 function filterRegioDropdown(hulpdienstValue) {
     const regioDropdownButton = document.getElementById('regio-dropdown');
     const regioDropdownMenu = regioDropdownButton.nextElementSibling.querySelector('.dropdown-menu');
-    regioDropdownMenu.innerHTML = ''; // Clear existing options
-
-    // Bepaal welke dropdown data we moeten gebruiken op basis van URL parameter
-    let dropdownData;
-    if (urlParams === 'NL') {
-        dropdownData = NLDropdown;
-    } else if (urlParams === 'BE') {
-        dropdownData = BEDropdown;
-        
-        // Voor België tonen we altijd alle regio's zonder filtering
-        populateDropdown(regioDropdownButton, dropdownData.RegioDropdown);
-        return;
-    } else if (urlParams === 'LUX') {
-        dropdownData = LUXDropdown;
-        
-        // Voor Luxemburg tonen we altijd alle regio's zonder filtering
-        populateDropdown(regioDropdownButton, dropdownData.RegioDropdown);
-        return;
-    }
-
-    // Alleen voor Nederland doen we specifieke filtering
+    
+    // Bepaal welke regio's we moeten tonen
     let availableRegions = [];
-
-    if (hulpdienstValue === 'all') {
-        // Voor "Alle Hulpdiensten", toon alle regio's
-        availableRegions = dropdownData.RegioDropdown;
-    } else {
-        // Vind alle unieke regio's die bestaan in de dataset voor deze hulpdienst
-        const regionsInData = [...new Set(
-            preprocessedDataset
-                .filter(item => item.Hulpdienst === hulpdienstValue)
-                .map(item => item.Regio)
-        )];
-
-        // Filter de dropdown data om alleen regio's te tonen die in de data bestaan
-        availableRegions = dropdownData.RegioDropdown.filter(region => 
-            region.value === 'all' || regionsInData.includes(region.value)
-        );
-
-        // Als geen specifieke regio's gevonden (behalve "all"), toon dan standaard regio's
-        if (availableRegions.length <= 1) {
-            availableRegions = dropdownData.RegioDropdown.filter(region => 
-                region.value === 'all' || 
-                (!region.text.includes('(Pol)') && 
-                 !region.text.includes('(Politie)') && 
-                 !region.text.includes('(RWS)') && 
-                 !region.text.includes('(KMAR)'))
-            );
+    
+    if (urlParams === 'NL') {
+        // Nederlandse regio logica
+        if (hulpdienstValue === 'Politie') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(Pol)'));
+        } 
+        else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(RWS)'));
+        } 
+        else if (hulpdienstValue === 'KMAR') {
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(KMAR)'));
+        } 
+        else {
+            // Standaard geval - toon alle regio's zonder speciale tags
+            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || 
+                (!r.text.includes('(Pol)') && !r.text.includes('(RWS)') && !r.text.includes('(KMAR)')));
         }
+    } 
+    else if (urlParams === 'BE') {
+        availableRegions = BEDropdown.RegioDropdown;
+    } 
+    else if (urlParams === 'LUX') {
+        availableRegions = LUXDropdown.RegioDropdown;
     }
-
-    // Speciale gevallen voor Politie, RWS, KMAR in Nederland
-    if (hulpdienstValue === 'Politie') {
-        availableRegions = dropdownData.RegioDropdown.filter(
-            region => region.value === 'all' || region.text.includes('(Pol)') || region.text.includes('(Politie)')
-        );
-    } else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
-        availableRegions = dropdownData.RegioDropdown.filter(
-            region => region.value === 'all' || region.text.includes('(RWS)')
-        );
-    } else if (hulpdienstValue === 'KMAR') {
-        availableRegions = dropdownData.RegioDropdown.filter(
-            region => region.value === 'all' || region.text.includes('(KMAR)')
-        );
-    }
-
-    // Vul de dropdown met de gefilterde regio's
-    populateDropdown(regioDropdownButton, availableRegions);
+    
+    // Vul de dropdown
+    regioDropdownMenu.innerHTML = '';
+    availableRegions.forEach(region => {
+        const li = document.createElement('li');
+        li.setAttribute('value', region.value);
+        li.textContent = region.text;
+        regioDropdownMenu.appendChild(li);
+    });
+    
+    // Reset naar "Alle Regio's"
+    regioDropdownButton.innerHTML = `Alle Regio's <i class="fa fa-chevron-down"></i>`;
+    regioDropdownButton.setAttribute('data-value', 'all');
 }
 
 
@@ -282,59 +254,64 @@ function updateHulpdienstDropdown(regioValue) {
 
 function initializeCustomDropdown(dropdownButton, callback) {
     const dropdownMenu = dropdownButton.nextElementSibling.querySelector('.dropdown-menu');
-    const dropdownItems = dropdownMenu.querySelectorAll('li');
+    
+    // Function to close the dropdown
+    const closeDropdown = () => {
+        dropdownMenu.classList.remove('visible');
+    };
 
-    dropdownButton.addEventListener('click', () => {
+    // Toggle dropdown visibility
+    dropdownButton.addEventListener('click', function(e) {
+        e.stopPropagation();
         dropdownMenu.classList.toggle('visible');
     });
 
-    dropdownItems.forEach((item) => {
-        item.addEventListener('click', () => {
-            const searchInput = document.getElementById('search-input');
-
-            if (searchInput) {
-                searchInput.value = ''; // Clear search input if present
+    // Handle item selection
+    dropdownMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'LI') {
+            const selectedValue = e.target.getAttribute('value');
+            const selectedText = e.target.textContent;
+            
+            dropdownButton.innerHTML = `${selectedText} <i class="fa fa-chevron-down"></i>`;
+            dropdownButton.setAttribute('data-value', selectedValue);
+            closeDropdown();
+            
+            if (typeof callback === 'function') {
+                callback();
             }
-
-            dropdownButton.innerHTML = `${item.textContent} <i class="fa fa-chevron-down"></i>`;
-            dropdownButton.setAttribute('data-value', item.getAttribute('value'));
-
-            dropdownMenu.classList.remove('visible');
-
-            if (dropdownButton.id === 'regio-dropdown') {
-                const regioValue = item.textContent;
-                if (regioValue.includes('(Politie)') || regioValue.includes('(RWS)')) {
-                    updateHulpdienstDropdown(regioValue); // Update hulpdienst based on selected region
-                }
-            }
-
+            
             if (dropdownButton.id === 'hulpdienst-dropdown') {
-                const hulpdienstValue = item.getAttribute('value');
-                // Reset regio dropdown to "All" when hulpdienst changes
-                const regioDropdownButton = document.getElementById('regio-dropdown');
-                regioDropdownButton.innerHTML = `Alle Regio's <i class="fa fa-chevron-down"></i>`;
-                regioDropdownButton.setAttribute('data-value', 'all');
-                filterRegioDropdown(hulpdienstValue); // Filter regions based on selected hulpdienst
+                filterRegioDropdown(selectedValue);
             }
-
-            callback();
-        });
+        }
     });
 
-    document.addEventListener('click', (e) => {
-        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-            dropdownMenu.classList.remove('visible');
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dropdownButton.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
+    // Close when pressing Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDropdown();
         }
     });
 }
-
 
 function filterAndSearchDataset(query, region, service, dataset) {
     const lowerQuery = query.toLowerCase();
     const filtered = [];
 
     dataset.forEach((item, index, array) => {
-        const matchesRegion = region === 'all' || item.Regio === region;
+        // Verbeterde regio matching
+        const matchesRegion = region === 'all' || 
+                            item.Regio === region || 
+                            (item.Regio && item.Regio.includes(region)) || 
+                            (region && region.includes(item.Regio));
+
         const matchesService = service === 'all' || item.Hulpdienst === service;
 
         const matchesSearch =
@@ -355,9 +332,9 @@ function filterAndSearchDataset(query, region, service, dataset) {
                 const childMatchesSearch =
                     childRow._searchField.includes(lowerQuery) ||
                     childRow.TypeVoertuig.toLowerCase().includes(lowerQuery) ||
-                    (childRow.Roepnummer && childRow.Roepnummer.toLowerCase().includes(lowerQuery)); // Added Roepnummer check for child rows
+                    (childRow.Roepnummer && childRow.Roepnummer.toLowerCase().includes(lowerQuery));
 
-                if (childMatchesSearch) {
+                if (childMatchesSearch && (region === 'all' || childRow.Regio === region)) {
                     hasMatchingChild = true;
                     break; 
                 }
@@ -385,6 +362,8 @@ function updateList(shouldClear = true) {
     const region = regioDropdown.getAttribute('data-value') || 'all';
     const service = hulpdienstDropdown.getAttribute('data-value') || 'all';
 
+    // console.log('Updating list with:', { query, region, service }); // Debug log
+
     filteredData = filterAndSearchDataset(query, region, service, preprocessedDataset);
 
     if (shouldClear) {
@@ -399,33 +378,14 @@ function updateList(shouldClear = true) {
     }
 
     if (filteredData.length === 0) {
-        // Check if the service is selected and no matches are found
-        if (service !== 'all' && query === '' && region === 'all') {
-            const noMatchDiv = document.createElement('div');
-            noMatchDiv.className = 'container';
-            const header = document.createElement('div');
-            header.className = 'header';
-            header.textContent = 'Word nog aan de lijst gewerkt, dit kan even duren!';
-            noMatchDiv.appendChild(header);
-            containersHolder.appendChild(noMatchDiv);
-        } else {
-            // No matches found due to region or search query
-            const noMatchDiv = document.createElement('div');
-            noMatchDiv.textContent = 'Geen overeenkomsten gevonden.';
-            noMatchDiv.style.textAlign = 'center';
-            noMatchDiv.style.padding = '20px';
-            noMatchDiv.style.color = '#888';
-            containersHolder.appendChild(noMatchDiv);
-        }
+        // Toon gepast bericht wanneer geen resultaten
+        const noMatchDiv = document.createElement('div');
+        noMatchDiv.className = 'no-results';
+        noMatchDiv.textContent = 'Geen overeenkomsten gevonden met de huidige filters.';
+        containersHolder.appendChild(noMatchDiv);
     } else {
         generateVisibleRows(filteredData, count, shouldClear);
     }
-
-    setTimeout(() => {
-        if (typeof window.updateScrollbar === 'function') {
-            window.updateScrollbar();
-        }
-    }, 50);
 }
 
 function debounce(func, wait) {

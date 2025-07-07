@@ -406,6 +406,7 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
     if (shouldClear) {
         containersHolder.innerHTML = '';
         offset = 0;
+        allRowsRendered = false; // Reset this flag when clearing
     }
 
     if (dataset.length === 0) {
@@ -1240,6 +1241,26 @@ function getLayoutConfig(hulpdienst, isNederland) {
     return infoGroup;
 }
 
+function handleScroll() {
+    if (isScrollting) return;
+    
+    isScrollting = true;
+    
+    // Check if we've reached the bottom of the scrollable content
+    const scrollableHeight = scrollableContent.scrollHeight;
+    const scrolled = scrollableContent.scrollTop + scrollableContent.clientHeight;
+    
+    // Load more when we're near the bottom (within 100px)
+    if (scrolled > scrollableHeight - 100 && !allRowsRendered) {
+        generateVisibleRows(filteredData, count, false);
+    }
+    
+    isScrollting = false;
+}
+
+// Debounced version of the scroll handler
+const debouncedHandleScroll = debounce(handleScroll, 100);
+
 document.addEventListener('DOMContentLoaded', async function () {
     const region = urlParams;
 
@@ -1305,6 +1326,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             }, 600);
         }
     }, 250);
+
+    scrollableContent.addEventListener('scroll', debouncedHandleScroll);
+
 });
 
 async function fetchDataFromGoogleSheets(region) {

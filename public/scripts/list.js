@@ -306,11 +306,26 @@ function filterAndSearchDataset(query, region, service, dataset) {
     const filtered = [];
 
     dataset.forEach((item, index, array) => {
-        // Verbeterde regio matching
-        const matchesRegion = region === 'all' || 
-                            item.Regio === region || 
-                            (item.Regio && item.Regio.includes(region)) || 
-                            (region && region.includes(item.Regio));
+        // Verbeterde regio matching - nu strikter
+        let matchesRegion = false;
+        
+        if (region === 'all') {
+            matchesRegion = true;
+        } else {
+            // Voor numerieke regio's (NL): exacte match op value of begin van value
+            if (/^\d+$/.test(region)) {
+                matchesRegion = 
+                    item.Regio === region || 
+                    (item.Regio && item.Regio.startsWith(region + ' -')) ||
+                    (item.Regio && item.Regio.startsWith(region + ' '));
+            } 
+            // Voor niet-numerieke regio's: exacte match of contains
+            else {
+                matchesRegion = 
+                    item.Regio === region ||
+                    (item.Regio && item.Regio.includes(region));
+            }
+        }
 
         const matchesService = service === 'all' || item.Hulpdienst === service;
 
@@ -334,7 +349,22 @@ function filterAndSearchDataset(query, region, service, dataset) {
                     childRow.TypeVoertuig.toLowerCase().includes(lowerQuery) ||
                     (childRow.Roepnummer && childRow.Roepnummer.toLowerCase().includes(lowerQuery));
 
-                if (childMatchesSearch && (region === 'all' || childRow.Regio === region)) {
+                // Striktere regio matching ook voor child rows
+                let childMatchesRegion = false;
+                if (region === 'all') {
+                    childMatchesRegion = true;
+                } else if (/^\d+$/.test(region)) {
+                    childMatchesRegion = 
+                        childRow.Regio === region || 
+                        (childRow.Regio && childRow.Regio.startsWith(region + ' -')) ||
+                        (childRow.Regio && childRow.Regio.startsWith(region + ' '));
+                } else {
+                    childMatchesRegion = 
+                        childRow.Regio === region ||
+                        (childRow.Regio && childRow.Regio.includes(region));
+                }
+
+                if (childMatchesSearch && childMatchesRegion) {
                     hasMatchingChild = true;
                     break; 
                 }

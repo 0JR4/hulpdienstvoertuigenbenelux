@@ -428,16 +428,28 @@ function updateList(shouldClear = true) {
         containersHolder.innerHTML = '';
     }
 
+    // Check of er überhaupt data bestaat voor deze hulpdienst
+    const hasDataForService = preprocessedDataset.some(item => item.Hulpdienst === service || service === 'all');
+
     if (filteredData.length === 0) {
-        const container = document.createElement('div');
-        container.className = 'container';
-        
-        const header = document.createElement('div');
-        header.className = 'header';
-        header.textContent = 'Er wordt nog gewerkt aan deze lijst';
-        
-        container.appendChild(header);
-        containersHolder.appendChild(container);
+        if (!hasDataForService && service !== 'all') {
+            // Geen data voor deze specifieke hulpdienst
+            const container = document.createElement('div');
+            container.className = 'container';
+            
+            const header = document.createElement('div');
+            header.className = 'header';
+            header.textContent = 'Er wordt nog gewerkt aan de lijst';
+            
+            container.appendChild(header);
+            containersHolder.appendChild(container);
+        } else {
+            // Wel data voor hulpdienst, maar geen matches met filters
+            const noMatchDiv = document.createElement('div');
+            noMatchDiv.className = 'no-results';
+            noMatchDiv.textContent = 'Geen overeenkomsten gevonden met de huidige filters.';
+            containersHolder.appendChild(noMatchDiv);
+        }
     } else {
         generateVisibleRows(filteredData, count, shouldClear);
     }

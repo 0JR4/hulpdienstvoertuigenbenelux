@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6XN7YM9YV"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -43,29 +42,30 @@
         </div>
     </section>
 
+    <section id="navbar">
+        <div id="navbar-region">
+            <a href="../list.html?NL" class="clickable">NL</a>
+            <a>/</a>
+            <a href="../list.html?BE" class="clickable">BE</a>
+            <a>/</a>
+            <a href="../list.html?LUX" class="clickable">LUX</a>
+        </div>
+            
+        <div id="navbar-group">
+            <a href="index.html">
+                <div id="navbar-button">Home</div>
+            </a>
+            <a href="contact.html">
+                <div id="navbar-button">Contact</div>
+            </a>
+            <a href="over-ons.html">
+                <div id="navbar-button">Over Ons</div>
+            </a>
+        </div>
+    </section>
+
     <div class="scroll-container">
         <div class="scroll-content">
-            <section id="navbar">
-                <div id="navbar-region">
-                    <a href="../list.html?NL" class="clickable">NL</a>
-                    <a>/</a>
-                    <a href="../list.html?BE" class="clickable">BE</a>
-                    <a>/</a>
-                    <a href="../list.html?LUX" class="clickable">LUX</a>
-                </div>
-            
-                <div id="navbar-group">
-                    <a href="index.html">
-                        <div id="navbar-button">Home</div>
-                    </a>
-                    <a href="contact.html">
-                        <div id="navbar-button">Contact</div>
-                    </a>
-                    <a href="over-ons.html">
-                        <div id="navbar-button">Over Ons</div>
-                    </a>
-                </div>
-            </section>
 
             <section id="header">
                 <a id="header-logo" href="index.html">
@@ -84,9 +84,6 @@
                         <button id="hulpdienst-dropdown" class="dropdown-button">Alle Hulpdiensten<i class="fa fa-chevron-down"></i></button>
                         <div class="dropdown-wrapper">
                             <ul class="dropdown-menu">
-                                <!-- <li>Hulpdienst 1</li>
-                                <li>Hulpdienst 2</li>
-                                <li>Hulpdienst 3</li> -->
                             </ul>
                             <div class="custom-scrollbar">
                                 <div class="scrollbar-thumb"></div>
@@ -98,9 +95,6 @@
                         <button id="regio-dropdown" class="dropdown-button">Alle Regio's<i class="fa fa-chevron-down"></i></button>
                         <div class="dropdown-wrapper">
                             <ul class="dropdown-menu">
-                                <!-- <li>Regio 1</li>
-                                <li>Regio 2</li>
-                                <li>Regio 3</li> -->
                             </ul>
                             <div class="custom-scrollbar">
                                 <div class="scrollbar-thumb"></div>
@@ -111,128 +105,7 @@
             </section>
 
             <section id="containers-holder">
-                <!-- <div class="container">
-                    <div class="header">01-10 Leek, Tolberterstraat 66</div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">01-1000</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Dienstauto</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">DA 5</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">X-1234-XX</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Geen</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">02-2000</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Tankautospuit</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">BA 3</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Y-5678-YY</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Geen</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="header">01-10 Leek, Tolberterstraat 66</div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-group">
-                        <div class="info-container">
-                            <div class="info-box">
-                                <div class="label">Roepnummer</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <button class="toggle-btn" onclick="toggleDetails(this)">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
-                                <div class="label">Type Voertuig</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                        <div class="info-container toggle-section hidden">
-                            <div class="info-box">
-                                <div class="label">Afkorting</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box">
-                                <div class="label">Kenteken</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                            <div class="info-box large">
-                                <div class="label">Bijzonderheden</div>
-                                <div class="value">Placeholder</div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+
             </section>
         </div>
     </div>
@@ -244,35 +117,28 @@
 
 
 <script>
-    // Configuration: Set this to true to allow only one info-group to be open at a time
-    const SINGLE_OPEN_MODE = false; // Change to false to allow multiple info-groups to be open
-    // Minimum height for info-box under 350px width
+    const SINGLE_OPEN_MODE = false; 
     const MIN_INFO_BOX_HEIGHT = 78;
 
-    // Function to update the height of info-group elements based on the info-box height
     function updateInfoGroupHeight() {
         document.querySelectorAll('.info-group').forEach(infoGroup => {
             const infoBox = infoGroup.querySelector('.info-box');
             if (infoBox) {
                 let infoBoxHeight = infoBox.offsetHeight;
-                // Check if the viewport width is less than 350px
                 if (window.innerWidth < 350) {
-                    // Enforce a minimum height of 78px for the info-box
                     infoBox.style.minHeight = `${MIN_INFO_BOX_HEIGHT}px`;
-                    infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); // Ensure minimum height
+                    infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); 
                 } else {
-                    // Remove min-height if viewport width is >= 350px
                     infoBox.style.minHeight = '';
                 }
-                const newHeight = infoBoxHeight + 4; // Add 4px to the height
+                const newHeight = infoBoxHeight + 4; 
                 infoGroup.style.height = `${newHeight}px`;
             }
         });
     }
 
-    // Add a resize event listener to the window
     window.addEventListener('resize', () => {
-        updateInfoGroupHeight(); // Update heights on window resize
+        updateInfoGroupHeight(); 
     });
 
     function toggleDetails(button) {
@@ -280,34 +146,30 @@
         const details = infoGroup.querySelector('.toggle-section');
         const toggleBtn = infoGroup.querySelector('.toggle-btn');
 
-        // Get the current height of the .info-box in its collapsed state
         const infoBox = infoGroup.querySelector('.info-box');
         let infoBoxHeight = infoBox ? infoBox.offsetHeight : 0;
 
-        // Adjust info-box height if viewport width is less than 350px
         if (window.innerWidth < 350) {
-            infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); // Ensure minimum height
+            infoBoxHeight = Math.max(infoBoxHeight, MIN_INFO_BOX_HEIGHT); 
         }
 
-        let collapsedHeight = infoBoxHeight + 4; // Collapsed height (info-box height + 4px)
+        let collapsedHeight = infoBoxHeight + 4; 
 
-        // If SINGLE_OPEN_MODE is true, close all other open info-groups
         if (SINGLE_OPEN_MODE) {
             document.querySelectorAll('.info-group').forEach((group) => {
                 if (group !== infoGroup && !group.querySelector('.toggle-section').classList.contains('hidden')) {
                     const otherDetails = group.querySelector('.toggle-section');
                     const otherToggleBtn = group.querySelector('.toggle-btn');
-                    // Collapse the other info-group
                     otherDetails.classList.add('hidden');
                     otherToggleBtn.classList.remove('active');
-                    group.style.height = `${collapsedHeight}px`; // Collapse to the collapsed height
+                    group.style.height = `${collapsedHeight}px`; 
                     requestAnimationFrame(() => {
                         group.style.transition = 'height 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out';
-                        group.style.height = `${collapsedHeight}px`; // Apply transition
+                        group.style.height = `${collapsedHeight}px`; 
                         group.style.padding = '0';
                         group.style.border = '2px solid transparent';
                     });
-                    // Clean up after transition ends
+
                     group.addEventListener('transitionend', () => {
                         group.style.transition = '';
                     }, { once: true });
@@ -315,43 +177,37 @@
             });
         }
 
-        // Toggle the 'hidden' class on the details section
         const isHidden = details.classList.toggle('hidden');
         toggleBtn.classList.toggle('active', !isHidden);
 
         if (isHidden) {
-            // Collapse the infoGroup to the collapsed height
-            const currentHeight = infoGroup.offsetHeight; // Get the current expanded height
-            infoGroup.style.height = `${currentHeight}px`; // Set to current height to prepare for transition
+            const currentHeight = infoGroup.offsetHeight; 
+            infoGroup.style.height = `${currentHeight}px`; 
             requestAnimationFrame(() => {
                 infoGroup.style.transition = 'height 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out';
-                infoGroup.style.height = `${collapsedHeight}px`; // Transition to collapsed height
+                infoGroup.style.height = `${collapsedHeight}px`; 
                 infoGroup.style.padding = '0';
                 infoGroup.style.border = '2px solid transparent';
             });
-            // Recalculate collapsedHeight after transition ends
             infoGroup.addEventListener('transitionend', () => {
-                infoGroup.style.transition = ''; // Reset transition after it ends
-                collapsedHeight = infoBox.offsetHeight + 4; // Recalculate collapsed height
-                infoGroup.style.height = `${collapsedHeight}px`; // Ensure correct height is applied
+                infoGroup.style.transition = ''; 
+                collapsedHeight = infoBox.offsetHeight + 4; 
+                infoGroup.style.height = `${collapsedHeight}px`; 
             }, { once: true });
         } else {
-            // Expand the infoGroup to its natural content height
-            infoGroup.style.height = 'auto'; // Temporarily set to auto to measure the natural height
-            const expandedHeight = infoGroup.scrollHeight; // Calculate the natural height
-            infoGroup.style.height = `${collapsedHeight}px`; // Reset to collapsed height before transitioning
+            infoGroup.style.height = 'auto'; 
+            const expandedHeight = infoGroup.scrollHeight; 
+            infoGroup.style.height = `${collapsedHeight}px`; 
             requestAnimationFrame(() => {
                 infoGroup.style.transition = 'height 0.3s ease-in, padding 0.3s ease-in, border 0.3s ease-in';
-                infoGroup.style.height = `${expandedHeight}px`; // Start transitioning to the expanded height
-                // Defer applying padding and border changes until after the next frame
+                infoGroup.style.height = `${expandedHeight}px`;
                 requestAnimationFrame(() => {
                     infoGroup.style.padding = '10px';
                     infoGroup.style.border = '2px solid #2d7df6';
                 });
             });
-            // Clean up after transition ends
             infoGroup.addEventListener('transitionend', () => {
-                infoGroup.style.height = 'auto'; // Set back to auto after the transition
+                infoGroup.style.height = 'auto';
                 infoGroup.style.transition = '';
             }, { once: true });
         }
@@ -361,11 +217,9 @@
         const dropdownButtons = document.querySelectorAll('.dropdown-button');
         const dropdownMenus = document.querySelectorAll('.dropdown-wrapper');
 
-        // Function to close all dropdowns
         function closeAllDropdowns() {
             dropdownMenus.forEach(menu => {
                 menu.classList.remove('active');
-                // Remove the event listener when the dropdown is closed
                 document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
             });
             dropdownButtons.forEach(button => {
@@ -373,13 +227,11 @@
             });
         }
 
-        // Function to prevent body scrolling
         function preventBodyScroll(e) {
             const activeDropdown = document.querySelector('.dropdown-wrapper.active');
             if (activeDropdown) {
-                // Check if the touch event is inside the active dropdown
                 const isInsideDropdown = activeDropdown.contains(e.target);
-                // Prevent scrolling if the touch is outside the dropdown
+
                 if (!isInsideDropdown) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -387,7 +239,6 @@
             }
         }
 
-        // Add event listeners to dropdown buttons
         dropdownButtons.forEach(button => {
             button.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -395,38 +246,32 @@
                 if (menu.classList.contains('active')) {
                     menu.classList.remove('active');
                     this.classList.remove('active');
-                    // Remove the event listener when the dropdown is closed
                     document.removeEventListener('touchmove', preventBodyScroll, { passive: false });
                 } else {
                     closeAllDropdowns();
                     menu.classList.add('active');
                     this.classList.add('active');
-                    // Add the event listener when the dropdown is opened
                     document.addEventListener('touchmove', preventBodyScroll, { passive: false });
                 }
             });
         });
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', function (e) {
             if (!e.target.closest('.dropdown')) {
                 closeAllDropdowns();
             }
         });
 
-        // Add event listeners to dropdown menu items
         dropdownMenus.forEach(menu => {
             menu.addEventListener('click', function (e) {
                 if (e.target.tagName === 'LI') {
                     const button = this.previousElementSibling;
-                    // Preserve the icon while updating the text
                     button.innerHTML = `${e.target.textContent} <i class="fa fa-chevron-down"></i>`;
                     closeAllDropdowns();
                 }
             });
         });
 
-        // Initialize scrollbar for both dropdowns
         initializeScrollbars();
     });
 
@@ -437,27 +282,21 @@
             const customScrollbar = dropdownWrapper.querySelector('.custom-scrollbar');
             let isDragging = false;
 
-            // Update scrollbar thumb height based on content
             function updateScrollbarThumb() {
                 const menuHeight = dropdownMenu.clientHeight;
                 const menuScrollHeight = dropdownMenu.scrollHeight;
-                // Calculate the thumb height as a percentage of the visible area
                 const thumbHeight = (menuHeight / menuScrollHeight) * menuHeight;
-                // Ensure the thumb has a minimum height (e.g., 20px) for usability
                 const minThumbHeight = 20;
                 scrollbarThumb.style.height = `${Math.max(thumbHeight, minThumbHeight)}px`;
             }
 
-            // Update scrollbar thumb position on scroll
             dropdownMenu.addEventListener("scroll", () => {
                 const scrollTop = dropdownMenu.scrollTop;
                 const maxScrollTop = dropdownMenu.scrollHeight - dropdownMenu.clientHeight;
-                // Calculate the thumb position based on the scroll progress
                 const thumbPosition = (scrollTop / maxScrollTop) * (customScrollbar.clientHeight - scrollbarThumb.clientHeight);
                 scrollbarThumb.style.top = `${thumbPosition}px`;
             });
 
-            // Drag functionality for scrollbar thumb
             scrollbarThumb.addEventListener("mousedown", (e) => {
                 isDragging = true;
                 document.body.style.userSelect = "none";
@@ -473,7 +312,6 @@
                     const maxThumbPosition = customScrollbar.clientHeight - scrollbarThumb.clientHeight;
                     const clampedPosition = Math.min(Math.max(newThumbPosition, 0), maxThumbPosition);
                     scrollbarThumb.style.top = `${clampedPosition}px`;
-                    // Calculate the scroll position based on the thumb position
                     const scrollTop = (clampedPosition / maxThumbPosition) * (dropdownMenu.scrollHeight - dropdownMenu.clientHeight);
                     dropdownMenu.scrollTop = scrollTop;
                 }
@@ -491,10 +329,8 @@
                 document.addEventListener("mouseup", stopDrag);
             });
 
-            // Initialize scrollbar thumb height
             updateScrollbarThumb();
 
-            // Update scrollbar thumb height when the dropdown content changes
             new MutationObserver(updateScrollbarThumb).observe(dropdownMenu, {
                 childList: true,
                 subtree: true,
@@ -503,7 +339,7 @@
     }
 
     function updAndClear() {
-        count = 100;
+        count = 50;
         debouncedUpdateList(true);
     }
 </script>

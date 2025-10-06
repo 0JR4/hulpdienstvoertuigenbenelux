@@ -1,22 +1,18 @@
-window.onload = function () {
-  // Update the scrollbar immediately when the page loads
-  if (typeof window.updateScrollbar === 'function') {
-      window.updateScrollbar();
-  }
+function hideLoader() {
+    const loader = document.querySelector('#showbox-holder');
+    if (!loader || loader.classList.contains('fade-out')) return;
 
-  // Set the duration for the loader to stay visible (e.g., 1 second)
-  setTimeout(function () {
-      const loader = document.querySelector('#showbox-holder');
+    document.documentElement.style.overflow = '';
 
-      // Add the fade-out class to trigger the animation
-      loader.classList.add('fade-out');
+    if (typeof window.updateScrollbar === 'function') {
+        window.updateScrollbar();
+    }
 
-      // Remove the overflow: hidden style from the html element
-      document.documentElement.style.overflow = '';
+    loader.classList.add('fade-out');
 
-      // Hide the loader after the fade-out animation is complete
-      setTimeout(function () {
-          loader.style.display = 'none';
-      }, 600); // Matches the fade-out duration
-  }, 1000); // 1000ms = 1 second
-};
+    setTimeout(() => {
+        if (loader.parentNode) {
+            loader.style.display = 'none';
+        }
+    }, 250);
+}

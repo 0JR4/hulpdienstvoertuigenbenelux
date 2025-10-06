@@ -18,7 +18,6 @@ const NLDropdown = {
         { value: "KMAR", text: "KMAR" },
         { value: "Rijksrederij", text: "Rijksrederij" },
     ],
-
     RegioDropdown: [
         { value: "all", text: "Alle Regio's" },
         { value: "1", text: "1 - Groningen (HVDG)" },
@@ -48,31 +47,37 @@ const NLDropdown = {
         { value: "25", text: "25 - Flevoland (VRFL)" },
         { value: "26", text: "26 - NIPV (IFV)" },
         { value: "28", text: "28 - Defensie (DF)" },
-        { value: "NN", text: "NN - Noord-Nederland (RWS)" },
-        { value: "ON", text: "ON - Oost-Nederland (RWS)" },
-        { value: "MN", text: "MN - Midden-Nederland (RWS)" },
-        { value: "WNN", text: "WNN - West-Nederland-Noord (RWS)" },
-        { value: "WNZ", text: "WNZ - West-Nederland-Zuid (RWS)" }, 
-        { value: "ZD", text: "ZD - Zee en Delta (RWS)" },
-        { value: "ZN", text: "ZN - Zuid-Nederland (RWS)" }, 
-        { value: "NN", text: "NN - Noord-Nederland (Pol)" },
-        { value: "ON", text: "ON - Oost-Nederland (Pol)" },
-        { value: "MD", text: "MD - Midden-Nederland (Pol)" },
-        { value: "NH", text: "NH - Noord-Holland (Pol)" },
-        { value: "AD", text: "AD - Amsterdam (Pol)" },
-        { value: "DH", text: "DH - Den Haag (Pol)" },
-        { value: "RT", text: "RT - Rotterdam (Pol)" },
-        { value: "ZB", text: "ZB - Zuid-Brabant (Pol)" },
-        { value: "OB", text: "OB - Oost-Brabant (Pol)" },
-        { value: "LB", text: "LB - Limburg (Pol)" }, 
-        { value: "LX", text: "LX - Landelijke Expertise en Operaties (Pol)" }, 
-        { value: "LTC", text: "LTC (KMAR)" },
-        { value: "Cluster A", text: "Cluster A (KMAR)" },
-        { value: "Cluster B", text: "Cluster B (KMAR)" },
-        { value: "Cluster C", text: "Cluster C (KMAR)" },
-        { value: "Cluster D", text: "Cluster D (KMAR)" },
-        { value: "Cluster E", text: "Cluster E (KMAR)" },
-        { value: "Specialistische Eenheden", text: "Specialistische Eenheden (KMAR)" },
+
+        // Rijkswaterstaat
+        { value: "NN-RWS", text: "NN - Noord-Nederland (RWS)" },
+        { value: "ON-RWS", text: "ON - Oost-Nederland (RWS)" },
+        { value: "MN-RWS", text: "MN - Midden-Nederland (RWS)" },
+        { value: "WNN-RWS", text: "WNN - West-Nederland-Noord (RWS)" },
+        { value: "WNZ-RWS", text: "WNZ - West-Nederland-Zuid (RWS)" },
+        { value: "ZD-RWS", text: "ZD - Zee en Delta (RWS)" },
+        { value: "ZN-RWS", text: "ZN - Zuid-Nederland (RWS)" },
+
+        // Politie
+        { value: "NN-POL", text: "NN - Noord-Nederland (Pol)" },
+        { value: "ON-POL", text: "ON - Oost-Nederland (Pol)" },
+        { value: "MD-POL", text: "MD - Midden-Nederland (Pol)" },
+        { value: "NH-POL", text: "NH - Noord-Holland (Pol)" },
+        { value: "AD-POL", text: "AD - Amsterdam (Pol)" },
+        { value: "DH-POL", text: "DH - Den Haag (Pol)" },
+        { value: "RT-POL", text: "RT - Rotterdam (Pol)" },
+        { value: "ZB-POL", text: "ZB - Zuid-Brabant (Pol)" },
+        { value: "OB-POL", text: "OB - Oost-Brabant (Pol)" },
+        { value: "LB-POL", text: "LB - Limburg (Pol)" },
+        { value: "LX-POL", text: "LX - Landelijke Expertise en Operaties (Pol)" },
+
+        // KMAR
+        { value: "LTC-KMAR", text: "LTC (KMAR)" },
+        { value: "CLUSTER-A-KMAR", text: "Cluster A (KMAR)" },
+        { value: "CLUSTER-B-KMAR", text: "Cluster B (KMAR)" },
+        { value: "CLUSTER-C-KMAR", text: "Cluster C (KMAR)" },
+        { value: "CLUSTER-D-KMAR", text: "Cluster D (KMAR)" },
+        { value: "CLUSTER-E-KMAR", text: "Cluster E (KMAR)" },
+        { value: "SPECIALISTISCHE-EENHEDEN-KMAR", text: "Specialistische Eenheden (KMAR)" },
     ]
 };
 
@@ -128,7 +133,7 @@ const regioDropdown = document.getElementById('regio-dropdown');
 const scrollableContent = document.querySelector('.scroll-content');
 const urlParams = window.location.search.substring(1);
 
-let count = 100;
+let count = 50;
 let preprocessedDataset = [];
 let filteredData = [];
 let offset = 0;

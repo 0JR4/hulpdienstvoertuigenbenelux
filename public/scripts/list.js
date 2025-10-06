@@ -584,28 +584,32 @@ function getLayoutConfig(hulpdienst, isNederland) {
     }
 }
 
-    function createInfoGroup(row) {
-        const infoGroup = document.createElement('div');
-        infoGroup.className = 'info-group';
+function createInfoGroup(row) {
+    const infoGroup = document.createElement('div');
+    infoGroup.className = 'info-group';
 
-        const isNederland = urlParams === 'NL';
-        const isBelgium = urlParams === 'BE';
-        const isLuxembourg = urlParams === 'LUX';
-        const hulpdienst = row.Hulpdienst; // Get the actual service from the row data
+    const isNederland = urlParams === 'NL';
+    const isBelgium = urlParams === 'BE';
+    const isLuxembourg = urlParams === 'LUX';
+    const hulpdienst = row.Hulpdienst;
+
+    // Helper functie om te controleren of er uitklapbare content is
+    const hasToggleContent = (row) => {
+        return (row.Afkorting && row.Afkorting.trim() !== '') || 
+               (row.Kenteken && row.Kenteken.trim() !== '') || 
+               (row.Bijzonderheden && row.Bijzonderheden.trim() !== '');
+    };
 
     // LUXEMBOURG MELDKAMERS
     if (isLuxembourg && hulpdienst === 'Meldkamers') {
         const infoContainer = document.createElement('div');
         infoContainer.className = 'info-container';
-
-        // Discipline (from TypeVoertuig) - full width
         infoContainer.innerHTML = `
             <div class="info-box" style="grid-column: 1 / -1">
                 <div class="label">Discipline</div>
                 <div class="value">${row.TypeVoertuig || ''}</div>
             </div>
         `;
-
         infoGroup.appendChild(infoContainer);
         return infoGroup;
     }
@@ -614,10 +618,9 @@ function getLayoutConfig(hulpdienst, isNederland) {
     if (isLuxembourg && hulpdienst === 'Politie') {
         const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
         
-        // Adres box (full width, toont TypeVoertuig waarde)
         const adresBox = document.createElement('div');
         adresBox.className = 'info-box';
-        adresBox.style.gridColumn = "1 / -1"; // Forceer full width
+        adresBox.style.gridColumn = "1 / -1";
         
         if (hasBijzonderheden) {
             // Met pijltje voor bijzonderheden
@@ -640,7 +643,7 @@ function getLayoutConfig(hulpdienst, isNederland) {
         if (hasBijzonderheden) {
             const hiddenContainer = document.createElement('div');
             hiddenContainer.className = 'info-container toggle-section hidden';
-            hiddenContainer.style.gridColumn = "1 / -1"; // Full width
+            hiddenContainer.style.gridColumn = "1 / -1";
             
             const bijzonderhedenBox = document.createElement('div');
             bijzonderhedenBox.className = 'info-box large';
@@ -671,57 +674,69 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(roepKentekenBox);
 
-        // Type Voertuig with toggle
+        // Type Voertuig - alleen pijltje als er uitklapbare content is
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
-        typeVoertuigBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Type Voertuig</div>
-            <div class="value">${row.TypeVoertuig || ''}</div>
-        `;
-        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        
+        const toggleContent = hasToggleContent(row);
+        if (toggleContent) {
+            typeVoertuigBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            typeVoertuigBox.innerHTML = `
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
         infoContainer1.appendChild(typeVoertuigBox);
 
         infoGroup.appendChild(infoContainer1);
 
-        const infoContainer2 = document.createElement('div');
-        infoContainer2.className = 'info-container toggle-section hidden';
+        // Alleen hidden container toevoegen als er uitklapbare content is
+        if (toggleContent) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
 
-        // Afkorting (full width)
-        if (row.Afkorting) {
-            const afkortingBox = document.createElement('div');
-            afkortingBox.className = 'info-box';
-            afkortingBox.style.gridColumn = "1 / -1";
-            afkortingBox.innerHTML = `
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            `;
-            infoContainer2.appendChild(afkortingBox);
+            // Afkorting (full width)
+            if (row.Afkorting) {
+                const afkortingBox = document.createElement('div');
+                afkortingBox.className = 'info-box';
+                afkortingBox.style.gridColumn = "1 / -1";
+                afkortingBox.innerHTML = `
+                    <div class="label">Afkorting</div>
+                    <div class="value">${row.Afkorting}</div>
+                `;
+                infoContainer2.appendChild(afkortingBox);
+            }
+
+            // Bijzonderheden (full width)
+            if (row.Bijzonderheden) {
+                const bijzonderhedenBox = document.createElement('div');
+                bijzonderhedenBox.className = 'info-box large';
+                bijzonderhedenBox.style.gridColumn = "1 / -1";
+                bijzonderhedenBox.innerHTML = `
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                `;
+                infoContainer2.appendChild(bijzonderhedenBox);
+            }
+
+            infoGroup.appendChild(infoContainer2);
         }
-
-        // Bijzonderheden (full width)
-        if (row.Bijzonderheden) {
-            const bijzonderhedenBox = document.createElement('div');
-            bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1";
-            bijzonderhedenBox.innerHTML = `
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            `;
-            infoContainer2.appendChild(bijzonderhedenBox);
-        }
-
-        infoGroup.appendChild(infoContainer2);
         return infoGroup;
     }
 
+    // LUXEMBOURG ACADEMIES
     if (isLuxembourg && hulpdienst === 'Academies') {
         const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
         const infoContainer = document.createElement('div');
         infoContainer.className = 'info-container';
 
         if (hasBijzonderheden) {
-            // When there are special details - split 50/50
             infoContainer.innerHTML = `
                 <div class="info-box">
                     <div class="label">Discipline</div>
@@ -733,7 +748,6 @@ function getLayoutConfig(hulpdienst, isNederland) {
                 </div>
             `;
         } else {
-            // When no special details - Discipline full width
             infoContainer.innerHTML = `
                 <div class="info-box" style="grid-column: 1 / -1">
                     <div class="label">Discipline</div>
@@ -760,50 +774,63 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(roepKentekenBox);
 
-        // Type Voertuig with toggle
+        // Type Voertuig - alleen pijltje als er uitklapbare content is
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
-        typeVoertuigBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Type Voertuig</div>
-            <div class="value">${row.TypeVoertuig || ''}</div>
-        `;
-        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        
+        const toggleContent = hasToggleContent(row);
+        if (toggleContent) {
+            typeVoertuigBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            typeVoertuigBox.innerHTML = `
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
         infoContainer1.appendChild(typeVoertuigBox);
 
         infoGroup.appendChild(infoContainer1);
 
-        const infoContainer2 = document.createElement('div');
-        infoContainer2.className = 'info-container toggle-section hidden';
+        // Alleen hidden container toevoegen als er uitklapbare content is
+        if (toggleContent) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
 
-        // Afkorting (full width)
-        if (row.Afkorting) {
-            const afkortingBox = document.createElement('div');
-            afkortingBox.className = 'info-box';
-            afkortingBox.style.gridColumn = "1 / -1";
-            afkortingBox.innerHTML = `
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            `;
-            infoContainer2.appendChild(afkortingBox);
+            // Afkorting (full width)
+            if (row.Afkorting) {
+                const afkortingBox = document.createElement('div');
+                afkortingBox.className = 'info-box';
+                afkortingBox.style.gridColumn = "1 / -1";
+                afkortingBox.innerHTML = `
+                    <div class="label">Afkorting</div>
+                    <div class="value">${row.Afkorting}</div>
+                `;
+                infoContainer2.appendChild(afkortingBox);
+            }
+
+            // Bijzonderheden (full width)
+            if (row.Bijzonderheden) {
+                const bijzonderhedenBox = document.createElement('div');
+                bijzonderhedenBox.className = 'info-box large';
+                bijzonderhedenBox.style.gridColumn = "1 / -1";
+                bijzonderhedenBox.innerHTML = `
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                `;
+                infoContainer2.appendChild(bijzonderhedenBox);
+            }
+
+            infoGroup.appendChild(infoContainer2);
         }
-
-        // Bijzonderheden (full width)
-        if (row.Bijzonderheden) {
-            const bijzonderhedenBox = document.createElement('div');
-            bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1";
-            bijzonderhedenBox.innerHTML = `
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            `;
-            infoContainer2.appendChild(bijzonderhedenBox);
-        }
-
-        infoGroup.appendChild(infoContainer2);
         return infoGroup;
     }
 
+    // LUXEMBOURG ZIEKENHUIZEN
     if (isLuxembourg && hulpdienst === 'Ziekenhuizen') {
         const infoContainer1 = document.createElement('div');
         infoContainer1.className = 'info-container';
@@ -817,21 +844,30 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(postnaamBox);
 
-        // Adres (from Kenteken) with toggle button
+        // Adres (from Kenteken) - alleen pijltje als er aantal bedden is
         const adresBox = document.createElement('div');
         adresBox.className = 'info-box';
-        adresBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Adres</div>
-            <div class="value">${row.Kenteken || ''}</div>
-        `;
-        adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        
+        const hasBedden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        if (hasBedden) {
+            adresBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Adres</div>
+                <div class="value">${row.Kenteken || ''}</div>
+            `;
+            adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            adresBox.innerHTML = `
+                <div class="label">Adres</div>
+                <div class="value">${row.Kenteken || ''}</div>
+            `;
+        }
         infoContainer1.appendChild(adresBox);
 
         infoGroup.appendChild(infoContainer1);
 
-        // Hidden container for Aantal Bedden
-        if (row.Bijzonderheden) {
+        // Hidden container voor Aantal Bedden alleen als aanwezig
+        if (hasBedden) {
             const infoContainer2 = document.createElement('div');
             infoContainer2.className = 'info-container toggle-section hidden';
             
@@ -854,16 +890,13 @@ function getLayoutConfig(hulpdienst, isNederland) {
     if (isBelgium && hulpdienst === 'Politie') {
         const infoContainer = document.createElement('div');
         infoContainer.className = 'info-container';
-
-        // Adres (volledige breedte, gebruikt TypeVoertuig als waarde)
         const adresBox = document.createElement('div');
         adresBox.className = 'info-box';
-        adresBox.style.gridColumn = "1 / -1"; // Neemt volledige breedte in
+        adresBox.style.gridColumn = "1 / -1";
         adresBox.innerHTML = `
             <div class="label">Adres</div>
             <div class="value">${row.TypeVoertuig || ''}</div>
         `;
-        
         infoContainer.appendChild(adresBox);
         infoGroup.appendChild(infoContainer);
         return infoGroup;
@@ -883,47 +916,59 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(roepnummerBox);
 
-        // Type Voertuig with toggle button
+        // Type Voertuig - alleen pijltje als er uitklapbare content is
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
-        typeVoertuigBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Type Voertuig</div>
-            <div class="value">${row.TypeVoertuig || ''}</div>
-        `;
-        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        
+        const toggleContent = hasToggleContent(row);
+        if (toggleContent) {
+            typeVoertuigBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            typeVoertuigBox.innerHTML = `
+                <div class="label">Type Voertuig</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
         infoContainer1.appendChild(typeVoertuigBox);
 
         infoGroup.appendChild(infoContainer1);
 
-        const infoContainer2 = document.createElement('div');
-        infoContainer2.className = 'info-container toggle-section hidden';
+        // Alleen hidden container toevoegen als er uitklapbare content is
+        if (toggleContent) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
 
-        // Afkorting (full width)
-        if (row.Afkorting) {
-            const afkortingBox = document.createElement('div');
-            afkortingBox.className = 'info-box large';
-            afkortingBox.style.gridColumn = "1 / -1";
-            afkortingBox.innerHTML = `
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            `;
-            infoContainer2.appendChild(afkortingBox);
+            // Afkorting (full width)
+            if (row.Afkorting) {
+                const afkortingBox = document.createElement('div');
+                afkortingBox.className = 'info-box large';
+                afkortingBox.style.gridColumn = "1 / -1";
+                afkortingBox.innerHTML = `
+                    <div class="label">Afkorting</div>
+                    <div class="value">${row.Afkorting}</div>
+                `;
+                infoContainer2.appendChild(afkortingBox);
+            }
+
+            // Bijzonderheden (full width)
+            if (row.Bijzonderheden) {
+                const bijzonderhedenBox = document.createElement('div');
+                bijzonderhedenBox.className = 'info-box large';
+                bijzonderhedenBox.style.gridColumn = "1 / -1";
+                bijzonderhedenBox.innerHTML = `
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                `;
+                infoContainer2.appendChild(bijzonderhedenBox);
+            }
+
+            infoGroup.appendChild(infoContainer2);
         }
-
-        // Bijzonderheden (full width)
-        if (row.Bijzonderheden) {
-            const bijzonderhedenBox = document.createElement('div');
-            bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1";
-            bijzonderhedenBox.innerHTML = `
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            `;
-            infoContainer2.appendChild(bijzonderhedenBox);
-        }
-
-        infoGroup.appendChild(infoContainer2);
         return infoGroup;
     }
     
@@ -941,11 +986,12 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(afkortingBox);
 
-        // Type Voertuig (50%) MET PIJLTJE (als er bijzonderheden zijn)
+        // Type Voertuig - alleen pijltje als er bijzonderheden zijn
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
         
-        if (row.Bijzonderheden) {
+        const hasBijzonderheden = row.Bijzonderheden && row.Bijzonderheden.trim() !== '';
+        if (hasBijzonderheden) {
             typeVoertuigBox.innerHTML = `
                 <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
                 <div class="label">Type Voertuig</div>
@@ -962,14 +1008,14 @@ function getLayoutConfig(hulpdienst, isNederland) {
 
         infoGroup.appendChild(infoContainer1);
 
-        // Verborgen sectie voor Bijzonderheden (alleen als aanwezig)
-        if (row.Bijzonderheden) {
+        // Verborgen sectie alleen als er bijzonderheden zijn
+        if (hasBijzonderheden) {
             const infoContainer2 = document.createElement('div');
             infoContainer2.className = 'info-container toggle-section hidden';
             
             const bijzonderhedenBox = document.createElement('div');
             bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1"; // Full width
+            bijzonderhedenBox.style.gridColumn = "1 / -1";
             bijzonderhedenBox.innerHTML = `
                 <div class="label">Bijzonderheden</div>
                 <div class="value">${row.Bijzonderheden}</div>
@@ -996,7 +1042,7 @@ function getLayoutConfig(hulpdienst, isNederland) {
         `;
         infoContainer1.appendChild(afkortingBox);
 
-        // Type Voertuig (50%) MET PIJLTJE (altijd, want er komt nog extra info)
+        // Type Voertuig - altijd pijltje want er komt altijd extra info
         const typeVoertuigBox = document.createElement('div');
         typeVoertuigBox.className = 'info-box';
         typeVoertuigBox.innerHTML = `
@@ -1041,267 +1087,73 @@ function getLayoutConfig(hulpdienst, isNederland) {
         return infoGroup;
     }
 
-    if (isNederland && (hulpdienst === 'ProRail' || hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs')) {
-        const infoContainer1 = document.createElement('div');
-        infoContainer1.className = 'info-container';
-
-        // Roepnummer (50%)
-        const roepnummerBox = document.createElement('div');
-        roepnummerBox.className = 'info-box';
-        roepnummerBox.innerHTML = `
-            <div class="label">Roepnummer</div>
-            <div class="value">${row.Roepnummer || ''}</div>
-        `;
-        infoContainer1.appendChild(roepnummerBox);
-
-        // Type Voertuig (50%) with toggle
-        const typeVoertuigBox = document.createElement('div');
-        typeVoertuigBox.className = 'info-box';
-        typeVoertuigBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Type Voertuig</div>
-            <div class="value">${row.TypeVoertuig || ''}</div>
-        `;
-        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
-        infoContainer1.appendChild(typeVoertuigBox);
-
-        infoGroup.appendChild(infoContainer1);
-
-        // Hidden section
-        const infoContainer2 = document.createElement('div');
-        infoContainer2.className = 'info-container toggle-section hidden';
-        
-        // Afkorting (full width) - altijd tonen als aanwezig
-        if (row.Afkorting) {
-            const afkortingBox = document.createElement('div');
-            afkortingBox.className = 'info-box large';
-            afkortingBox.style.gridColumn = "1 / -1";
-            afkortingBox.innerHTML = `
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            `;
-            infoContainer2.appendChild(afkortingBox);
-        }
-
-        // Voor Rijkswaterstaat/Weginspecteurs: toon ook Bijzonderheden als full width
-        if ((hulpdienst === 'Rijkswaterstaat' || hulpdienst === 'Weginspecteurs') && row.Bijzonderheden) {
-            const bijzonderhedenBox = document.createElement('div');
-            bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1";
-            bijzonderhedenBox.innerHTML = `
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            `;
-            infoContainer2.appendChild(bijzonderhedenBox);
-        }
-
-        infoGroup.appendChild(infoContainer2);
-        return infoGroup;
-    }
-
-    // BERGINGSBEDRIJF (Nederland)
-    if (isNederland && hulpdienst === 'Bergingsbedrijf') {
-        const infoContainer1 = document.createElement('div');
-        infoContainer1.className = 'info-container';
-
-        // Roepnummer (50%)
-        const roepnummerBox = document.createElement('div');
-        roepnummerBox.className = 'info-box';
-        roepnummerBox.innerHTML = `
-            <div class="label">Roepnummer</div>
-            <div class="value">${row.Roepnummer || ''}</div>
-        `;
-        infoContainer1.appendChild(roepnummerBox);
-
-        // Type Voertuig (50%) with toggle
-        const typeVoertuigBox = document.createElement('div');
-        typeVoertuigBox.className = 'info-box';
-        typeVoertuigBox.innerHTML = `
-            <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-            <div class="label">Type Voertuig</div>
-            <div class="value">${row.TypeVoertuig || ''}</div>
-        `;
-        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
-        infoContainer1.appendChild(typeVoertuigBox);
-
-        infoGroup.appendChild(infoContainer1);
-
-        // Hidden section
-        const infoContainer2 = document.createElement('div');
-        infoContainer2.className = 'info-container toggle-section hidden';
-        
-        // Afkorting (full width) - altijd tonen als aanwezig
-        if (row.Afkorting) {
-            const afkortingBox = document.createElement('div');
-            afkortingBox.className = 'info-box large';
-            afkortingBox.style.gridColumn = "1 / -1";
-            afkortingBox.innerHTML = `
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            `;
-            infoContainer2.appendChild(afkortingBox);
-        }
-
-        // Bijzonderheden (full width)
-        if (row.Bijzonderheden) {
-            const bijzonderhedenBox = document.createElement('div');
-            bijzonderhedenBox.className = 'info-box large';
-            bijzonderhedenBox.style.gridColumn = "1 / -1";
-            bijzonderhedenBox.innerHTML = `
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            `;
-            infoContainer2.appendChild(bijzonderhedenBox);
-        }
-
-        infoGroup.appendChild(infoContainer2);
-        return infoGroup;
-    }
-
-    // HOSPITALS
-    if (hulpdienst === 'Ziekenhuizen') {
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-
-        if (isNederland) {
-            // Dutch hospitals
-            infoContainer.innerHTML = `
-                <div class="info-box">
-                    <div class="label">Adres</div>
-                    <div class="value">${row.TypeVoertuig || ''}</div>
-                </div>
-                <div class="info-box">
-                    <div class="label">Aantal Bedden</div>
-                    <div class="value">${row.Bijzonderheden || ''}</div>
-                </div>
-            `;
-        } else {
-            // BE/LUX hospitals
-            infoContainer.innerHTML = `
-                <div class="info-box">
-                    <div class="label">Naam</div>
-                    <div class="value">${row.TypeVoertuig || ''}</div>
-                </div>
-                <div class="info-box">
-                    <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
-                    <div class="label">Adres</div>
-                    <div class="value">${row.Adres || ''}</div>
-                </div>
-            `;
-            infoContainer.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
-
-            if (row.Bijzonderheden) {
-                const hiddenContainer = document.createElement('div');
-                hiddenContainer.className = 'info-container toggle-section hidden';
-                hiddenContainer.innerHTML = `
-                    <div class="info-box large" style="grid-column: 1 / -1">
-                        <div class="label">Aantal Bedden</div>
-                        <div class="value">${row.Bijzonderheden}</div>
-                    </div>
-                `;
-                infoGroup.appendChild(hiddenContainer);
-            }
-        }
-
-        infoGroup.appendChild(infoContainer);
-        return infoGroup;
-    }
-
-    // ACADEMIES (non-LUX)
-    if (hulpdienst === 'Academies' && !isLuxembourg) {
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-        infoContainer.innerHTML = `
-            <div class="info-box">
-                <div class="label">Discipline</div>
-                <div class="value">${row.Bijzonderheden || ''}</div>
-            </div>
-            <div class="info-box">
-                <div class="label">Adres</div>
-                <div class="value">${row.TypeVoertuig || ''}</div>
-            </div>
-        `;
-        infoGroup.appendChild(infoContainer);
-        return infoGroup;
-    }
-
-    // DISPATCH CENTERS
-    if (hulpdienst === 'Meldkamers') {
-        const infoContainer = document.createElement('div');
-        infoContainer.className = 'info-container';
-
-        if (isNederland) {
-            infoContainer.innerHTML = `
-                <div class="info-box">
-                    <div class="label">Veiligheidsregio</div>
-                    <div class="value">${row.TypeVoertuig || ''}</div>
-                </div>
-                <div class="info-box">
-                    <div class="label">Bijzonderheden</div>
-                    <div class="value">${row.Bijzonderheden || ''}</div>
-                </div>
-            `;
-        } else {
-            infoContainer.innerHTML = `
-                <div class="info-box" style="grid-column: 1 / -1">
-                    <div class="label">Adres</div>
-                    <div class="value">${row.TypeVoertuig || ''}</div>
-                </div>
-            `;
-        }
-
-        infoGroup.appendChild(infoContainer);
-        return infoGroup;
-    }
-
     // DEFAULT LAYOUT FOR ALL OTHER SERVICES
     const infoContainer1 = document.createElement('div');
     infoContainer1.className = 'info-container';
-    infoContainer1.innerHTML = `
-        <div class="info-box">
-            <div class="label">Roepnummer</div>
-            <div class="value">${row.Roepnummer || ''}</div>
-        </div>
-        <div class="info-box">
+    
+    // Roepnummer box (zonder pijltje)
+    const roepnummerBox = document.createElement('div');
+    roepnummerBox.className = 'info-box';
+    roepnummerBox.innerHTML = `
+        <div class="label">Roepnummer</div>
+        <div class="value">${row.Roepnummer || ''}</div>
+    `;
+    infoContainer1.appendChild(roepnummerBox);
+
+    // Type Voertuig box - alleen pijltje als er uitklapbare content is
+    const typeVoertuigBox = document.createElement('div');
+    typeVoertuigBox.className = 'info-box';
+    
+    const toggleContent = hasToggleContent(row);
+    if (toggleContent) {
+        typeVoertuigBox.innerHTML = `
             <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
             <div class="label">Type Voertuig</div>
             <div class="value">${row.TypeVoertuig || ''}</div>
-        </div>
-    `;
-    infoContainer1.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        `;
+        typeVoertuigBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+    } else {
+        typeVoertuigBox.innerHTML = `
+            <div class="label">Type Voertuig</div>
+            <div class="value">${row.TypeVoertuig || ''}</div>
+        `;
+    }
+    infoContainer1.appendChild(typeVoertuigBox);
+
     infoGroup.appendChild(infoContainer1);
 
-    const infoContainer2 = document.createElement('div');
-    infoContainer2.className = 'info-container toggle-section hidden';
-    
-    if (row.Afkorting) {
-        infoContainer2.innerHTML += `
-            <div class="info-box">
-                <div class="label">Afkorting</div>
-                <div class="value">${row.Afkorting}</div>
-            </div>
-        `;
-    }
-    
-    if (row.Kenteken) {
-        infoContainer2.innerHTML += `
-            <div class="info-box">
-                <div class="label">Kenteken</div>
-                <div class="value">${row.Kenteken}</div>
-            </div>
-        `;
-    }
-    
-    if (row.Bijzonderheden) {
-        infoContainer2.innerHTML += `
-            <div class="info-box large" style="grid-column: 1 / -1">
-                <div class="label">Bijzonderheden</div>
-                <div class="value">${row.Bijzonderheden}</div>
-            </div>
-        `;
-    }
+    // Alleen hidden container toevoegen als er uitklapbare content is
+    if (toggleContent) {
+        const infoContainer2 = document.createElement('div');
+        infoContainer2.className = 'info-container toggle-section hidden';
+        
+        if (row.Afkorting) {
+            infoContainer2.innerHTML += `
+                <div class="info-box">
+                    <div class="label">Afkorting</div>
+                    <div class="value">${row.Afkorting}</div>
+                </div>
+            `;
+        }
+        
+        if (row.Kenteken) {
+            infoContainer2.innerHTML += `
+                <div class="info-box">
+                    <div class="label">Kenteken</div>
+                    <div class="value">${row.Kenteken}</div>
+                </div>
+            `;
+        }
+        
+        if (row.Bijzonderheden) {
+            infoContainer2.innerHTML += `
+                <div class="info-box large" style="grid-column: 1 / -1">
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                </div>
+            `;
+        }
 
-    if (row.Afkorting || row.Kenteken || row.Bijzonderheden) {
         infoGroup.appendChild(infoContainer2);
     }
 

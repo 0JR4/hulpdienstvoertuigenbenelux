@@ -142,4 +142,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    let domReady = false;
+    let minTimePassed = false;
+
+    function tryHideLoader() {
+        if (domReady && minTimePassed && typeof hideLoader === 'function') {
+            hideLoader();
+        }
+    }
+
+    // Zet minimaal 500ms timer
+    setTimeout(() => {
+        minTimePassed = true;
+        tryHideLoader();
+    }, 500);
+
+    // Wacht op DOMContentLoaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            domReady = true;
+            tryHideLoader();
+        });
+    } else {
+        // DOM is al klaar
+        domReady = true;
+        tryHideLoader();
+    }
 });

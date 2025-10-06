@@ -455,20 +455,10 @@ function updateList(shouldClear = true) {
         generateVisibleRows(filteredData, count, shouldClear);
     }
 
-    // ✅ NEW: Hide loader after first render (only when clearing = initial load)
     if (shouldClear) {
-        const loader = document.querySelector('#showbox-holder');
-        if (loader && !loader.classList.contains('fade-out')) {
-            loader.classList.add('fade-out');
-            document.documentElement.style.overflow = '';
-            if (typeof window.updateScrollbar === 'function') {
-                window.updateScrollbar();
-            }
-            setTimeout(() => {
-                if (loader) loader.style.display = 'none';
-            }, 600);
-        }
+        hideLoader();
     }
+
 }
 
 function debounce(func, wait) {
@@ -1326,26 +1316,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     debouncedUpdateList(true);
 
     input.addEventListener('input', debouncedUpdateList);
-
-    setTimeout(() => {
-        const loader = document.querySelector('#showbox-holder');
-
-        if (loader) {
-            loader.classList.add('fade-out');
-
-            document.documentElement.style.overflow = '';
-
-            if (typeof window.updateScrollbar === 'function') {
-                window.updateScrollbar();
-            }
-
-            setTimeout(() => {
-                if (loader) {
-                    loader.style.display = 'none';
-                }
-            }, 600);
-        }
-    }, 250);
 
     scrollableContent.addEventListener('scroll', debouncedHandleScroll);
 

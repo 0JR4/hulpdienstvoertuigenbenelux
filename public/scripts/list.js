@@ -133,7 +133,7 @@ const regioDropdown = document.getElementById('regio-dropdown');
 const scrollableContent = document.querySelector('.scroll-content');
 const urlParams = window.location.search.substring(1);
 
-let count = 100;
+let count = 50;
 let preprocessedDataset = [];
 let filteredData = [];
 let offset = 0;
@@ -419,16 +419,14 @@ function updateList(shouldClear = true) {
     const query = input.value || '';
     const region = regioDropdown.getAttribute('data-value') || 'all';
     const service = hulpdienstDropdown.getAttribute('data-value') || 'all';
-
     filteredData = filterAndSearchDataset(query, region, service, preprocessedDataset);
-
+    
     if (shouldClear) {
         offset = 0;
         allRowsRendered = false;
     }
 
     const containersHolder = document.getElementById('containers-holder');
-
     if (shouldClear) {
         containersHolder.innerHTML = '';
     }
@@ -441,11 +439,9 @@ function updateList(shouldClear = true) {
             // Geen data voor deze specifieke hulpdienst
             const container = document.createElement('div');
             container.className = 'container';
-            
             const header = document.createElement('div');
             header.className = 'header';
             header.textContent = 'Er wordt nog gewerkt aan de lijst';
-            
             container.appendChild(header);
             containersHolder.appendChild(container);
         } else {
@@ -457,6 +453,21 @@ function updateList(shouldClear = true) {
         }
     } else {
         generateVisibleRows(filteredData, count, shouldClear);
+    }
+
+    // ✅ NEW: Hide loader after first render (only when clearing = initial load)
+    if (shouldClear) {
+        const loader = document.querySelector('#showbox-holder');
+        if (loader && !loader.classList.contains('fade-out')) {
+            loader.classList.add('fade-out');
+            document.documentElement.style.overflow = '';
+            if (typeof window.updateScrollbar === 'function') {
+                window.updateScrollbar();
+            }
+            setTimeout(() => {
+                if (loader) loader.style.display = 'none';
+            }, 600);
+        }
     }
 }
 

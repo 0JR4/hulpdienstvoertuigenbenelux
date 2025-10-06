@@ -133,7 +133,7 @@ const regioDropdown = document.getElementById('regio-dropdown');
 const scrollableContent = document.querySelector('.scroll-content');
 const urlParams = window.location.search.substring(1);
 
-let count = 50;
+let count = 100;
 let preprocessedDataset = [];
 let filteredData = [];
 let offset = 0;

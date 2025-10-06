@@ -130,13 +130,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.updateScrollbar = updateScrollbar;
-});
 
-window.addEventListener('scroll', function() {
     const navbar = document.getElementById('navbar');
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+    if (scrollableContent && navbar) {
+        scrollableContent.addEventListener('scroll', () => {
+            // Gebruik scrollTop van de custom scroll container
+            if (scrollableContent.scrollTop > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
     }
 });

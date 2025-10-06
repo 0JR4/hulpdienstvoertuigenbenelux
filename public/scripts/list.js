@@ -1087,6 +1087,91 @@ function createInfoGroup(row) {
         return infoGroup;
     }
 
+    // NEDERLAND KMAR - Aangepaste velden
+    if (isNederland && hulpdienst === 'KMAR') {
+        const infoContainer1 = document.createElement('div');
+        infoContainer1.className = 'info-container';
+
+        // Basisteamnummer (was Roepnummer)
+        const basisteamnummerBox = document.createElement('div');
+        basisteamnummerBox.className = 'info-box';
+        basisteamnummerBox.innerHTML = `
+            <div class="label">Basisteamnummer</div>
+            <div class="value">${row.Roepnummer || ''}</div>
+        `;
+        infoContainer1.appendChild(basisteamnummerBox);
+
+        // Adres (was TypeVoertuig)
+        const adresBox = document.createElement('div');
+        adresBox.className = 'info-box';
+        const hasToggleContent = (row.Dienst && row.Dienst.trim() !== '') || 
+                                (row['Soort post'] !== undefined && row['Soort post'].trim() !== '') ||
+                                (row.Bijzonderheden && row.Bijzonderheden.trim() !== '');
+
+        // Maar: we gebruiken Afkorting als "Dienst", en Kenteken als "Soort post"
+        const hasExtra = (row.Afkorting && row.Afkorting.trim() !== '') || 
+                        (row.Kenteken && row.Kenteken.trim() !== '') ||
+                        (row.Bijzonderheden && row.Bijzonderheden.trim() !== '');
+
+        if (hasExtra) {
+            adresBox.innerHTML = `
+                <div class="toggle-btn"><i class="fa fa-chevron-down"></i></div>
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+            adresBox.querySelector('.toggle-btn').onclick = function() { toggleDetails(this); };
+        } else {
+            adresBox.innerHTML = `
+                <div class="label">Adres</div>
+                <div class="value">${row.TypeVoertuig || ''}</div>
+            `;
+        }
+        infoContainer1.appendChild(adresBox);
+
+        infoGroup.appendChild(infoContainer1);
+
+        // Verborgen sectie met Dienst (Afkorting), Soort post (Kenteken), en Bijzonderheden
+        if (hasExtra) {
+            const infoContainer2 = document.createElement('div');
+            infoContainer2.className = 'info-container toggle-section hidden';
+
+            if (row.Afkorting) {
+                const dienstBox = document.createElement('div');
+                dienstBox.className = 'info-box';
+                dienstBox.innerHTML = `
+                    <div class="label">Dienst</div>
+                    <div class="value">${row.Afkorting}</div>
+                `;
+                infoContainer2.appendChild(dienstBox);
+            }
+
+            if (row.Kenteken) {
+                const soortPostBox = document.createElement('div');
+                soortPostBox.className = 'info-box';
+                soortPostBox.innerHTML = `
+                    <div class="label">Soort post</div>
+                    <div class="value">${row.Kenteken}</div>
+                `;
+                infoContainer2.appendChild(soortPostBox);
+            }
+
+            if (row.Bijzonderheden) {
+                const bijzonderhedenBox = document.createElement('div');
+                bijzonderhedenBox.className = 'info-box large';
+                bijzonderhedenBox.style.gridColumn = "1 / -1";
+                bijzonderhedenBox.innerHTML = `
+                    <div class="label">Bijzonderheden</div>
+                    <div class="value">${row.Bijzonderheden}</div>
+                `;
+                infoContainer2.appendChild(bijzonderhedenBox);
+            }
+
+            infoGroup.appendChild(infoContainer2);
+        }
+
+        return infoGroup;
+    }
+
     // DEFAULT LAYOUT FOR ALL OTHER SERVICES
     const infoContainer1 = document.createElement('div');
     infoContainer1.className = 'info-container';

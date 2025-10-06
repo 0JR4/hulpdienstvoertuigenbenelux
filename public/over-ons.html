@@ -269,6 +269,10 @@
     startAutoSlide();
 
     window.addEventListener("resize", () => moveToSlide(currentIndex));
+
+    window.addEventListener('load', () => {
+        requestHideLoader();
+    });
     </script>
 </body>
 </html>

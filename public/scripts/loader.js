@@ -1,4 +1,4 @@
-
+// scripts/loader.js
 let loaderShowTime = null;
 let hideRequested = false;
 
@@ -49,3 +49,20 @@ function doHideLoader() {
         }
     }, 250); 
 }
+
+// Wait until DOM is ready before showing loader
+document.addEventListener('DOMContentLoaded', showLoader);
+
+// Hide loader automatically on all pages EXCEPT list.html
+window.addEventListener('load', () => {
+    const isListPage = window.location.pathname.endsWith('/list.html');
+    if (!isListPage) {
+        requestHideLoader();
+    } else {
+
+    }
+});
+
+// Make functions globally available
+window.requestHideLoader = requestHideLoader;
+window.showLoader = showLoader;

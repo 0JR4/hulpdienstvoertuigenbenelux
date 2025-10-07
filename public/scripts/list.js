@@ -454,11 +454,6 @@ function updateList(shouldClear = true) {
     } else {
         generateVisibleRows(filteredData, count, shouldClear);
     }
-
-    if (shouldClear) {
-        hideLoader();
-    }
-
 }
 
 function debounce(func, wait) {
@@ -475,11 +470,10 @@ const debouncedUpdateList = debounce(() => {
 
 function generateVisibleRows(dataset, amount, shouldClear = false) {
     const containersHolder = document.getElementById('containers-holder');
-
     if (shouldClear) {
         containersHolder.innerHTML = '';
         offset = 0;
-        allRowsRendered = false; // Reset this flag when clearing
+        allRowsRendered = false;
     }
 
     if (dataset.length === 0) {
@@ -489,6 +483,10 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
         noMatchDiv.style.padding = '20px';
         noMatchDiv.style.color = '#888';
         containersHolder.appendChild(noMatchDiv);
+
+        if (shouldClear) {
+            requestHideLoader(); // Hide loader even when no results
+        }
         return;
     }
 
@@ -499,6 +497,7 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
     for (let i = offset; i < dataset.length; i++) {
         const row = dataset[i];
 
+        // Parent row (address header)
         if (row.TypeVoertuig === '' && row.Adres) {
             if (renderedCount >= amount && currentContainer !== null) {
                 break;
@@ -512,9 +511,9 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
             header.className = 'header';
             header.textContent = currentAddress;
             currentContainer.appendChild(header);
-
             containersHolder.appendChild(currentContainer);
 
+            // Render child rows (vehicles under this address)
             let j = i + 1;
             while (j < dataset.length && dataset[j].TypeVoertuig !== '') {
                 const childRow = dataset[j];
@@ -525,8 +524,10 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
             }
 
             offset = j;
-            i = j - 1;
-        } else if (currentContainer && row.TypeVoertuig !== '') {
+            i = j - 1; // Skip already-rendered child rows
+        }
+        // Standalone vehicle row (no address header)
+        else if (currentContainer && row.TypeVoertuig !== '') {
             const infoGroup = createInfoGroup(row);
             currentContainer.appendChild(infoGroup);
             renderedCount++;
@@ -541,10 +542,15 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
         allRowsRendered = true;
     }
 
+    // Ensure layout is updated
     debouncedUpdateInfoGroupHeight();
-
     if (typeof window.updateScrollbar === 'function') {
         window.updateScrollbar();
+    }
+
+    // ✅ Only hide loader after initial render is truly done
+    if (shouldClear) {
+        requestHideLoader();
     }
 }
 

@@ -49,12 +49,3 @@ function doHideLoader() {
         }
     }, 250); 
 }
-
-window.LoaderManager = {
-    showLoader,
-    requestHideLoader,
-    attemptHideLoader,
-    doHideLoader,
-    loaderShowTime,
-    hideRequested
-};

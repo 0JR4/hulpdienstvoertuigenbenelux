@@ -309,10 +309,11 @@
         let allowClose = false;
 
         function showPrivacyPopup() {
-            if (privacyPopup) {
-                privacyPopup.classList.add('active');
-                allowClose = true; // Set allowClose to true when the popup is opened
-                updateScrollbar();
+            if (!privacyPopup) return;
+            privacyPopup.classList.add('active');
+            allowClose = true;
+            if (typeof window.updateScrollbar === 'function') {
+                window.updateScrollbar();
             }
         }
 

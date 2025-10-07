@@ -25,6 +25,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+function generateTicketNumber() {
+    const prefix = 'HDV'; // Hulpdienstvoertuigenbenelux
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // 20240515
+    const random = Math.floor(1000 + Math.random() * 9000); // 1000–9999
+    return `${prefix}-${date}-${random}`;
+}
+
 // Log email and password for debugging (REMOVE THIS IN PRODUCTION)
 console.log(`Email User: ${process.env.EMAIL_USER}`);
 console.log(`Email Password: ${process.env.EMAIL_PASS}`);
@@ -33,13 +40,18 @@ app.post('/send-email', (req, res) => {
     console.log('Received form data:', req.body);
     const { naam, email, reason, bericht } = req.body;
 
+    // Genereer een uniek ticketnummer
+    const ticketNumber = generateTicketNumber();
+
     const mailOptions = {
-        from: process.env.EMAIL_USER, // Send from your own email
-        replyTo: email, // Set reply-to to the user's email
+        from: process.env.EMAIL_USER,
+        replyTo: email,
         to: process.env.EMAIL_USER,
-        subject: `Hulpdienstvoertuigenbenelux - ${reason} - ${naam}`,
+        subject: `[${ticketNumber}] Hulpdienstvoertuigenbenelux - ${reason} - ${naam}`,
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
+                <p><strong>Ticketnummer:</strong> ${ticketNumber}</p>
+                <hr>
                 <p><strong>Naam:</strong><br>${naam}</p>
                 <hr>
                 <p><strong>Email:</strong><br><a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a></p>
@@ -57,10 +69,13 @@ app.post('/send-email', (req, res) => {
             return res.status(500).json({ message: 'Failed to send email.' });
         }
         console.log('Email sent:', info.response);
-        res.status(200).json({ message: 'Email sent successfully.' });
+        // Stuur het ticketnummer ook terug naar de frontend (optioneel, maar handig!)
+        res.status(200).json({ 
+            message: 'Email sent successfully.',
+            ticketNumber: ticketNumber 
+        });
     });
 });
-
 
 // Route to fetch Google Sheets data
 app.get('/fetch-sheet', async (req, res) => {

@@ -485,7 +485,7 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
         containersHolder.appendChild(noMatchDiv);
 
         if (shouldClear) {
-            requestHideLoader(); // Hide loader even when no results
+            window.LoaderManager.requestHideLoader();
         }
         return;
     }
@@ -548,9 +548,8 @@ function generateVisibleRows(dataset, amount, shouldClear = false) {
         window.updateScrollbar();
     }
 
-    // ✅ Only hide loader after initial render is truly done
     if (shouldClear) {
-        requestHideLoader();
+        window.LoaderManager.requestHideLoader();
     }
 }
 

@@ -86,7 +86,6 @@ app.post('/send-email', async (req, res) => {
                 <ul>
                     <li>Houd uw ticketnummer <strong>${ticketNumber}</strong> bij de hand voor referentie</li>
                     <li>Wij streven ernaar binnen 2 werkdagen te reageren</li>
-                    <li>Voor spoedgevallen kunt u ons direct bellen</li>
                 </ul>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">

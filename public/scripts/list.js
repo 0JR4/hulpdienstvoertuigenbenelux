@@ -11,7 +11,7 @@ const NLDropdown = {
         { value: "Ziekenhuizen", text: "Ziekenhuizen" },
         { value: "Academies", text: "Academies" },
         { value: "Meldkamers", text: "Meldkamers" },
-        { value: "Weginspecteurs", text: "Weginspecteurs" },
+        { value: "Weginspecteurs", text: "Weginspecteurs (Provincie)" },
         { value: "Kustwacht", text: "Kustwacht" },
         { value: "Douane", text: "Douane" },
         { value: "Bergingsbedrijf", text: "Bergingsbedrijf" },

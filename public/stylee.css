@@ -1322,7 +1322,12 @@ transform: translateY(-2px);
 
 
 
-
+#header-text .discord-link a {
+    color: white;             /* Wit zoals h1/h2 */
+    text-decoration: none;    /* Geen onderstreping */
+    font-size: 16px;          /* Pas aan naar wens */
+    font-weight: normal;      /* Minder zwaar dan h1/h2 */
+}
 
 
 

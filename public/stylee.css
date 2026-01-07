@@ -1362,7 +1362,109 @@ transform: translateY(-2px);
 
 
 
+#social-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px auto;
+    width: 100%;
+    max-width: 600px;
+    padding: 0 30px;
+}
 
+.separator-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0 20px 0;
+    position: relative;
+}
+
+.line {
+    flex: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.or-text {
+    padding: 0 15px;
+    color: var(--text-color4);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#social-contact h2 {
+    color: var(--text-color2);
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: 500;
+    margin: 10px 0 15px 0;
+    text-align: center;
+}
+
+.social-buttons {
+    display: flex;
+    width: 100%;
+}
+
+.social-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(88, 101, 242, 0.9),
+        rgba(88, 101, 242, 0.7)
+    );
+    border: 1px solid rgba(88, 101, 242, 0.3);
+}
+
+.social-button:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(88, 101, 242, 1),
+        rgba(88, 101, 242, 0.85)
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-button i {
+    font-size: 16px;
+}
+
+@media (max-width: 500px) {
+    #social-contact {
+        padding: 0 15px;
+        margin: 20px auto;
+    }
+    
+    .or-text {
+        padding: 0 12px;
+        font-size: 11px;
+    }
+    
+    #social-contact h2 {
+        font-size: 13px;
+        margin: 8px 0 12px 0;
+    }
+    
+    .social-button {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
 
 
 #main-content {
@@ -1583,12 +1685,12 @@ transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     border: 1px solid #4b4b4b;
-    transform: scale(0.8); /* Initial scale for transition */
+    transform: scale(0.8); 
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .popup.active .popup-content {
-    transform: scale(1); /* Scale up when active */
+    transform: scale(1); 
 }
 
 .privacy-text {

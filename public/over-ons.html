@@ -143,7 +143,7 @@
 
             <section id="navbar" class="footer">
                 <div id="navbar-group">
-                    <h1>© 2025 - 2026 Hulpdienstvoertuigen</h1>
+                    <h1>©&nbsp;<span id="current-year"></span>&nbsp;HulpdienstvoertuigenBeNeLux</h1>
                     <div id="footer-buttons">
                         <a href="index.html">
                             <div id="navbar-button">Home</div>
@@ -165,114 +165,126 @@
     </div>
 
     <script>
-    const carousel = document.querySelector(".carousel");
-    const carouselContainer = document.querySelector(".carousel-container");
-    const dotsContainer = document.querySelector(".dots");
-    let currentIndex = 1;
-    let autoSlideInterval;
-
-    const originalImages = Array.from(document.querySelectorAll(".image-holder"));
-
-    function getVisibleSlides() {
-        const containerWidth = carouselContainer.clientWidth;
-        const slideWidth = originalImages[0].clientWidth + 20; 
-        return Math.max(1, Math.floor(containerWidth / slideWidth));
-    }
-
-    function createDots() {
-        dotsContainer.innerHTML = "";
-        originalImages.forEach((_, index) => {
-            const dot = document.createElement("div");
-            dot.classList.add("dot");
-            if (index === currentIndex) dot.classList.add("active");
-            dot.addEventListener("click", () => {
-                moveToSlide(index);
-                resetAutoSlide(); 
-            });
-            dotsContainer.appendChild(dot);
+        document.addEventListener("DOMContentLoaded", function() {
+            const yearElement = document.getElementById("current-year");
+            const currentYear = new Date().getFullYear();
+            const startYear = 2025;
+            
+            if (currentYear === startYear) {
+                yearElement.textContent = startYear;
+            } else {
+                yearElement.textContent = startYear + " - " + currentYear;
+            }
         });
-    }
 
-    function updateDots() {
-        document.querySelectorAll(".dot").forEach((dot, index) => {
-            dot.classList.toggle("active", index === currentIndex);
-        });
-    }
+        const carousel = document.querySelector(".carousel");
+        const carouselContainer = document.querySelector(".carousel-container");
+        const dotsContainer = document.querySelector(".dots");
+        let currentIndex = 1;
+        let autoSlideInterval;
 
-    function updateActiveImage() {
-        originalImages.forEach((img, index) => {
-            img.classList.toggle("active", index === currentIndex);
-        });
-    }
+        const originalImages = Array.from(document.querySelectorAll(".image-holder"));
 
-    function startAutoSlide() {
-        autoSlideInterval = setInterval(() => {
-            const nextIndex = (currentIndex + 1) % originalImages.length;
-            moveToSlide(nextIndex);
-        }, 10000); 
-    }
-
-    function stopAutoSlide() {
-        clearInterval(autoSlideInterval);
-    }
-
-    function resetAutoSlide() {
-        stopAutoSlide(); 
-        startAutoSlide(); 
-    }
-
-    function setupCarousel() {
-        const firstClone = originalImages[0].cloneNode(true);
-        const lastClone = originalImages[originalImages.length - 1].cloneNode(true);
-
-        firstClone.classList.remove("active");
-        lastClone.classList.remove("active");
-
-        carousel.prepend(lastClone); 
-        carousel.append(firstClone); 
-
-        const allImages = Array.from(carousel.children);
-
-        return allImages;
-    }
-
-    function moveToSlide(index) {
-        const allImages = Array.from(carousel.children); 
-
-        if (index < 0 || index >= originalImages.length) return;
-
-        currentIndex = index;
-
-        const slideWidth = originalImages[0].clientWidth;
-        const gap = 20;
-        const containerWidth = carouselContainer.clientWidth;
-        const visibleSlides = getVisibleSlides();
-
-        let offset;
-        if (visibleSlides >= 3) {
-            offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
-        } else if (visibleSlides === 2) {
-            offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
-        } else {
-            offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
+        function getVisibleSlides() {
+            const containerWidth = carouselContainer.clientWidth;
+            const slideWidth = originalImages[0].clientWidth + 20; 
+            return Math.max(1, Math.floor(containerWidth / slideWidth));
         }
 
-        carousel.style.transform = `translateX(${offset}px)`;
-        updateDots();
-        updateActiveImage();
-    }
+        function createDots() {
+            dotsContainer.innerHTML = "";
+            originalImages.forEach((_, index) => {
+                const dot = document.createElement("div");
+                dot.classList.add("dot");
+                if (index === currentIndex) dot.classList.add("active");
+                dot.addEventListener("click", () => {
+                    moveToSlide(index);
+                    resetAutoSlide(); 
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
 
-    const allImages = setupCarousel();
-    createDots();
-    moveToSlide(currentIndex);
+        function updateDots() {
+            document.querySelectorAll(".dot").forEach((dot, index) => {
+                dot.classList.toggle("active", index === currentIndex);
+            });
+        }
 
-    startAutoSlide();
+        function updateActiveImage() {
+            originalImages.forEach((img, index) => {
+                img.classList.toggle("active", index === currentIndex);
+            });
+        }
 
-    window.addEventListener("resize", () => moveToSlide(currentIndex));
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                const nextIndex = (currentIndex + 1) % originalImages.length;
+                moveToSlide(nextIndex);
+            }, 10000); 
+        }
 
-    window.addEventListener('load', () => {
-        requestHideLoader();
-    });
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        function resetAutoSlide() {
+            stopAutoSlide(); 
+            startAutoSlide(); 
+        }
+
+        function setupCarousel() {
+            const firstClone = originalImages[0].cloneNode(true);
+            const lastClone = originalImages[originalImages.length - 1].cloneNode(true);
+
+            firstClone.classList.remove("active");
+            lastClone.classList.remove("active");
+
+            carousel.prepend(lastClone); 
+            carousel.append(firstClone); 
+
+            const allImages = Array.from(carousel.children);
+
+            return allImages;
+        }
+
+        function moveToSlide(index) {
+            const allImages = Array.from(carousel.children); 
+
+            if (index < 0 || index >= originalImages.length) return;
+
+            currentIndex = index;
+
+            const slideWidth = originalImages[0].clientWidth;
+            const gap = 20;
+            const containerWidth = carouselContainer.clientWidth;
+            const visibleSlides = getVisibleSlides();
+
+            let offset;
+            if (visibleSlides >= 3) {
+                offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
+            } else if (visibleSlides === 2) {
+                offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
+            } else {
+                offset = -(currentIndex + 1) * (slideWidth + gap) + (containerWidth / 2 - slideWidth / 2);
+            }
+
+            carousel.style.transform = `translateX(${offset}px)`;
+            updateDots();
+            updateActiveImage();
+        }
+
+        const allImages = setupCarousel();
+        createDots();
+        moveToSlide(currentIndex);
+
+        startAutoSlide();
+
+        window.addEventListener("resize", () => moveToSlide(currentIndex));
+
+        window.addEventListener('load', () => {
+            requestHideLoader();
+        });
     </script>
 </body>
 </html>

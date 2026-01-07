@@ -229,11 +229,15 @@ function filterRegioDropdown(hulpdienstValue) {
         else if (hulpdienstValue === 'KMAR') {
             availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(KMAR)'));
         }
-        else if (standardRegionServices.includes(hulpdienstValue)) {
-            availableRegions = NLDropdown.RegioDropdown.filter(r => 
-                r.value === 'all' || 
-                (/^\d+$/.test(r.value) && parseInt(r.value) >= 1 && parseInt(r.value) <= 25)
-            );
+        if (standardRegionServices.includes(hulpdienstValue)) {
+        availableRegions = NLDropdown.RegioDropdown.filter(r =>
+            r.value === 'all' ||
+            (/^\d+$/.test(r.value) && (
+            (parseInt(r.value) >= 1 && parseInt(r.value) <= 25) ||
+            parseInt(r.value) === 26 ||
+            parseInt(r.value) === 28
+            ))
+        );
         }
         else {
             availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || 

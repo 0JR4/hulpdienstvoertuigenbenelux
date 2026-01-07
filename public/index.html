@@ -173,7 +173,7 @@
 
             <section id="navbar" class="footer">
                 <div id="navbar-group">
-                    <h1>© 2025 - 2026 Hulpdienstvoertuigen</h1>
+                    <h1>©&nbsp;<span id="current-year"></span>&nbsp;HulpdienstvoertuigenBeNeLux</h1>
                     <div id="footer-buttons">
                         <a href="index.html">
                             <div id="navbar-button">Home</div>
@@ -187,35 +187,41 @@
                     </div>
                 </div>
             </section>
-        </div> <!-- End of .scroll-content -->
+        </div>
 
-        <!-- Custom scrollbar for the body -->
         <div class="custom-scrollbar-body">
             <div class="scrollbar-thumb"></div>
         </div>
-    </div> <!-- End of .scroll-container -->
+    </div> 
 </body>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const yearElement = document.getElementById("current-year");
+    const currentYear = new Date().getFullYear();
+    const startYear = 2025;
+    
+    if (currentYear === startYear) {
+        yearElement.textContent = startYear;
+    } else {
+        yearElement.textContent = startYear + " - " + currentYear;
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const buttonsHolder = document.getElementById("buttons-holder");
     const buttonImages = Array.from(document.querySelectorAll("#list-images"));
     let observer;
 
-    // Function to adjust the number of buttons per row based on screen width
     function adjustButtonLayout() {
-        // Clear existing rows
         buttonsHolder.innerHTML = "";
 
-        // Determine the number of buttons per row based on screen width
         let buttonsPerRow = window.innerWidth <= 800 ? 2 : 4;
 
-        // Create new rows and append buttons
         for (let i = 0; i < buttonImages.length; i += buttonsPerRow) {
             const row = document.createElement("div");
             row.classList.add("button-row");
 
-            // Append the correct number of buttons per row
             for (let j = i; j < i + buttonsPerRow && j < buttonImages.length; j++) {
                 row.appendChild(buttonImages[j]);
             }
@@ -223,63 +229,52 @@ document.addEventListener("DOMContentLoaded", function () {
             buttonsHolder.appendChild(row);
         }
 
-        // Reinitialize the IntersectionObserver for the new rows
         initializeObserver();
     }
 
-    // Function to initialize the IntersectionObserver for row visibility effects
     function initializeObserver() {
         const buttonRows = document.querySelectorAll('.button-row');
 
-        // Function to handle row visibility
         function handleRowVisibility(entries) {
             entries.forEach(entry => {
                 const row = entry.target;
 
                 if (entry.isIntersecting) {
-                    // Row enters the viewport
-                    row.style.display = 'flex'; // Ensure the row is visible
-                    row.style.opacity = '0';    // Start with opacity 0
-                    row.style.transform = 'translateY(20px)'; // Start from below
+                    row.style.display = 'flex'; 
+                    row.style.opacity = '0';    
+                    row.style.transform = 'translateY(20px)'; 
 
-                    // Trigger smooth fade-in animation
                     setTimeout(() => {
                         row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                        row.style.opacity = '1';  // Fade in
-                        row.style.transform = 'translateY(0)'; // Move to normal position
+                        row.style.opacity = '1';  
+                        row.style.transform = 'translateY(0)'; 
                     }, 10);
                 } else {
-                    // Row exits the viewport
                     row.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    row.style.opacity = '0';    // Fade out
-                    row.style.transform = 'translateY(20px)'; // Move it down
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(20px)'; 
                 }
             });
         }
 
-        // Create an IntersectionObserver
         observer = new IntersectionObserver(handleRowVisibility, {
-            root: null, // Use the viewport as the root
-            rootMargin: '0px', // No additional margin
-            threshold: 0.1 // Trigger when 10% of the row is visible
+            root: null, 
+            rootMargin: '0px', 
+            threshold: 0.1 
         });
 
-        // Observe each row
         buttonRows.forEach(row => {
             observer.observe(row);
         });
     }
 
-    // Adjust layout on load and resize
     adjustButtonLayout();
     window.addEventListener("resize", adjustButtonLayout);
 
-    // Handle "Neem contact op!" button click
     document.getElementById("contact-btn").addEventListener("click", function () {
         window.location.href = "contact.html";
     });
 
-    // Handle "Lijst Nederland" and "Lijst Belgie" button clicks
     document.getElementById('btn-nl').addEventListener('click', () => {
         window.location.href = 'list.html?NL';
     });
@@ -292,14 +287,13 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = 'list.html?LUX';
     });
 
-    // Handle clicks on list images
     const buttons = document.querySelectorAll("#list-images img");
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
-            const altText = button.getAttribute("alt"); // Get the alt attribute value
-            localStorage.setItem("selectedDropdownValue", altText); // Store it in localStorage
-            window.location.href = "list.html?NL"; // Redirect to list.html
+            const altText = button.getAttribute("alt"); 
+            localStorage.setItem("selectedDropdownValue", altText); 
+            window.location.href = "list.html?NL"; 
         });
     });
 });
@@ -415,93 +409,76 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
     const icons = document.querySelectorAll('.icon');
     const dynamicText = document.getElementById('dynamic-text');
-    const dynamicTitle = document.getElementById('dynamic-title'); // Select the <h2> element
-    const contentParagraph = document.querySelector('.content p'); // Select the <p> element
-    let selectedIcon = null; // Track the currently selected icon
+    const dynamicTitle = document.getElementById('dynamic-title'); 
+    const contentParagraph = document.querySelector('.content p');
+    let selectedIcon = null; 
 
-    // Function to calculate the height for a specific number of lines
     function getHeightForLines(element, lines) {
         const lineHeight = parseFloat(window.getComputedStyle(element).lineHeight);
         return lineHeight * lines;
     }
 
-    // Function to smoothly transition the height of the <p> element
     function setParagraphHeight(lines, duration = 300) {
         const targetHeight = getHeightForLines(contentParagraph, lines);
-        // Disable height transition during fade-out
         contentParagraph.style.transition = 'opacity 150ms ease, height 0ms ease';
         contentParagraph.style.opacity = 0;
-        // Wait for the fade-out to complete, then adjust height
         setTimeout(() => {
             contentParagraph.style.height = `${targetHeight}px`;
-            contentParagraph.style.transition = `height ${duration}ms ease, opacity 150ms ease`; // Re-enable height transition
-            // Wait for the height transition to complete, then fade in
+            contentParagraph.style.transition = `height ${duration}ms ease, opacity 150ms ease`; 
             setTimeout(() => {
                 contentParagraph.style.opacity = 1;
-            }, duration); // Fade in after height transition
-        }, 150); // Delay to allow fade-out to complete
+            }, duration); 
+        }, 150); 
     }
 
-    // Initialize the paragraph height based on the default content (1 line)
     (function initializeParagraphHeight() {
-        const defaultLines = 1; // Default number of lines for the initial content
+        const defaultLines = 1; 
         const initialHeight = getHeightForLines(contentParagraph, defaultLines);
         contentParagraph.style.height = `${initialHeight}px`;
     })();
 
     icons.forEach(icon => {
         icon.addEventListener('click', async () => {
-            // If an icon is already selected, reset it
             if (selectedIcon) {
                 selectedIcon.classList.remove('center');
             }
 
-            // If the clicked icon is not already selected, move it to the center
             if (selectedIcon !== icon) {
                 icon.classList.add('center');
                 selectedIcon = icon;
 
-                // Get the text, number of lines, and title from the clicked icon
                 let text = icon.getAttribute('data-text');
-                const lines = parseInt(icon.getAttribute('data-lines')) || 2; // Default to 2 lines if not specified
-                const title = icon.getAttribute('data-title') || "Functies en Informatie van deze Website"; // Default title
+                const lines = parseInt(icon.getAttribute('data-lines')) || 2; 
+                const title = icon.getAttribute('data-title') || "Functies en Informatie van deze Website";
 
-                // Update the <h2> element
                 dynamicTitle.textContent = title;
 
-                // Fade out dynamic text
                 dynamicText.style.opacity = 0;
                 setTimeout(() => {
                     dynamicText.textContent = text;
-                    dynamicText.style.opacity = 1; // Fade in new text
+                    dynamicText.style.opacity = 1; 
                 }, 200);
 
-                // Smoothly expand the <p> to the specified number of lines with fade effect
                 setParagraphHeight(lines);
             } else {
-                // If the same icon is clicked again, deselect it
                 selectedIcon = null;
 
-                // Reset the <h2> and <p> elements to their default states
                 dynamicTitle.textContent = "Functies en Informatie van deze Website";
-                dynamicText.style.opacity = 0; // Fade out text
+                dynamicText.style.opacity = 0;
                 setTimeout(() => {
                     dynamicText.textContent = "Kies een optie voor meer informatie.";
-                    dynamicText.style.opacity = 1; // Fade in default text
+                    dynamicText.style.opacity = 1; 
                 }, 200);
 
-                // Smoothly collapse the <p> back to 1 line with fade effect
                 setParagraphHeight(1);
             }
         });
     });
 
-    // Function to reset all icons to their original positions
     function resetIcons() {
         icons.forEach(icon => {
             icon.classList.remove('center');
         });
-        // Reset the <h2> and <p> elements to their default states
         dynamicTitle.textContent = "Informatie en functies van deze website";
         setParagraphHeight(1);
     }

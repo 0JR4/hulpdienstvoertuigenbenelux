@@ -195,68 +195,70 @@ function populateDropdown(dropdownButton, dropdownData) {
 }
 
 function filterRegioDropdown(hulpdienstValue) {
-    const regioDropdownButton = document.getElementById('regio-dropdown');
-    const regioDropdownMenu = regioDropdownButton.nextElementSibling.querySelector('.dropdown-menu');
-    
-    // Als "Alle Hulpdiensten" is geselecteerd, toon alle regio's
-    if (hulpdienstValue === 'all') {
-        if (urlParams === 'NL') {
-            populateDropdown(regioDropdownButton, NLDropdown.RegioDropdown);
-        } else if (urlParams === 'BE') {
-            populateDropdown(regioDropdownButton, BEDropdown.RegioDropdown);
-        } else if (urlParams === 'LUX') {
-            populateDropdown(regioDropdownButton, LUXDropdown.RegioDropdown);
-        }
-        return;
-    }
+  const regioDropdownButton = document.getElementById('regio-dropdown');
+  
+  let dropdownData;
+  if (urlParams === 'NL') {
+    dropdownData = NLDropdown;
+  } else if (urlParams === 'BE') {
+    dropdownData = BEDropdown;
+  } else if (urlParams === 'LUX') {
+    dropdownData = LUXDropdown;
+  } else {
+    return;
+  }
 
-    // Rest van je bestaande filterlogica...
-    let availableRegions = [];
-    
-    if (urlParams === 'NL') {
-        const standardRegionServices = [
-            'Brandweer', 'Ambulance', 'Reddingsbrigade', 'KNRM', 
-            'ProRail', 'Academies', 'Meldkamers', 'Ziekenhuizen',
-            'Kustwacht', 'Bergingsbedrijf', 'Douane'
-        ];
+  let availableRegions = [];
 
-        if (hulpdienstValue === 'Politie') {
-            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(Pol)'));
-        } 
-        else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
-            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(RWS)'));
-        } 
-        else if (hulpdienstValue === 'KMAR') {
-            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || r.text.includes('(KMAR)'));
-        }
-        if (standardRegionServices.includes(hulpdienstValue)) {
-        availableRegions = NLDropdown.RegioDropdown.filter(r =>
-            r.value === 'all' ||
-            (/^\d+$/.test(r.value) && (
-            (parseInt(r.value) >= 1 && parseInt(r.value) <= 25) ||
-            parseInt(r.value) === 26 ||
-            parseInt(r.value) === 28
-            ))
+  if (hulpdienstValue === 'all') {
+    availableRegions = dropdownData.RegioDropdown;
+  } 
+  else if (urlParams === 'NL') {
+    if (hulpdienstValue === 'Politie') {
+      availableRegions = dropdownData.RegioDropdown.filter(
+        r => r.value === 'all' || r.text.endsWith('(Pol)')
+      );
+    } 
+    else if (hulpdienstValue === 'Rijkswaterstaat' || hulpdienstValue === 'Weginspecteurs') {
+      availableRegions = dropdownData.RegioDropdown.filter(
+        r => r.value === 'all' || r.text.endsWith('(RWS)')
+      );
+    } 
+    else if (hulpdienstValue === 'KMAR') {
+      availableRegions = dropdownData.RegioDropdown.filter(
+        r => r.value === 'all' || r.text.endsWith('(KMAR)')
+      );
+    } 
+    else {
+      const standardServices = [
+        'Brandweer', 'Ambulance', 'Reddingsbrigade', 'KNRM',
+        'ProRail', 'Academies', 'Meldkamers', 'Ziekenhuizen',
+        'Kustwacht', 'Bergingsbedrijf', 'Douane'
+      ];
+      if (standardServices.includes(hulpdienstValue)) {
+        availableRegions = dropdownData.RegioDropdown.filter(r =>
+          r.value === 'all' ||
+          (/^\d+$/.test(r.value) && parseInt(r.value) >= 1 && parseInt(r.value) <= 25) ||
+          r.value === '26' ||
+          r.value === '28'
         );
-        }
-        else {
-            availableRegions = NLDropdown.RegioDropdown.filter(r => r.value === 'all' || 
-                (!r.text.includes('(Pol)') && !r.text.includes('(RWS)') && !r.text.includes('(KMAR)')));
-        }
-    } 
-    else if (urlParams === 'BE') {
-        availableRegions = BEDropdown.RegioDropdown;
-    } 
-    else if (urlParams === 'LUX') {
-        availableRegions = LUXDropdown.RegioDropdown;
+      } else {
+        availableRegions = dropdownData.RegioDropdown.filter(
+          r => r.value === 'all' || (!r.text.includes('(Pol)') && !r.text.includes('(RWS)') && !r.text.includes('(KMAR)'))
+        );
+      }
     }
-    
-    // Vul de dropdown
-    populateDropdown(regioDropdownButton, availableRegions);
-    
-    // Reset naar "Alle Regio's"
+  } 
+  else {
+    availableRegions = dropdownData.RegioDropdown;
+  }
+
+  populateDropdown(regioDropdownButton, availableRegions);
+
+  if (!['Politie', 'Rijkswaterstaat', 'Weginspecteurs', 'KMAR'].includes(hulpdienstValue)) {
     regioDropdownButton.innerHTML = `Alle Regio's <i class="fa fa-chevron-down"></i>`;
     regioDropdownButton.setAttribute('data-value', 'all');
+  }
 }
 
 

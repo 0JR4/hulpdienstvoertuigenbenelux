@@ -65,7 +65,7 @@ const NLDropdown = {
         { value: "AD-POL", text: "AD - Amsterdam (Pol)" },
         { value: "DH-POL", text: "DH - Den Haag (Pol)" },
         { value: "RT-POL", text: "RT - Rotterdam (Pol)" },
-        { value: "ZB-POL", text: "ZB - Zuid-Brabant (Pol)" },
+        { value: "ZB-POL", text: "ZB - Zeeland / West-Brabant (Pol)" },
         { value: "OB-POL", text: "OB - Oost-Brabant (Pol)" },
         { value: "LB-POL", text: "LB - Limburg (Pol)" },
         { value: "LX-POL", text: "LX - Landelijke Expertise en Operaties (Pol)" },

@@ -11,6 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const cache = new NodeCache({ stdTTL: 3600 });
 
+app.use((req, res) => {
+    res.redirect(301, 'https://hulpdienstvoertuigenbenelux.nl/');
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
